@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encontro 2: Análise Exploratória, Estatística Descritiva e Testes de Normalidade | Mentoria Tese Vanna Cabral</title>
+  
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #f4f6f9;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --border-subtle: #d0d7de;
+      --border-strong: #afb8c1;
+      --text-main: #1f2328;
+      --text-muted: #57606a;
+      --accent-navy: #0969da;
+      --accent-navy-dark: #054da7;
+      --accent-gold: #9a6700;
+      --accent-gold-bg: #fff8c5;
+      --accent-gold-border: #d4a72c;
+      --accent-cyan: #057a85;
+      --accent-green: #1a7f37;
+      --accent-green-bg: #dafbe1;
+      --accent-red: #cf222e;
+      --accent-red-bg: #ffebe9;
+      --accent-purple: #8250df;
+      --accent-purple-bg: #fbefff;
+      --gradient-header: linear-gradient(135deg, #0969da 0%, #8250df 100%);
+      --shadow-elevation: 0 4px 20px rgba(140, 149, 159, 0.2);
+      --shadow-card: 0 2px 8px rgba(140, 149, 159, 0.12);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-badge {
+      background: #ddf4ff;
+      color: #0969da;
+      border: 1px solid #54aeff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #e1e4e8;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--gradient-header);
+      transition: width 0.3s ease;
+    }
+
+    .slider-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 94%;
+      max-width: 1240px;
+      height: 84vh;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 40px 50px;
+      box-shadow: var(--shadow-elevation);
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(16px) scale(0.99);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: text;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #1f2328;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      margin-bottom: 22px;
+      border-bottom: 2px solid #eaeef2;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #24292f;
+      margin: 18px 0 10px 0;
+    }
+
+    p {
+      color: var(--text-main);
+      font-size: 1.02rem;
+      margin-bottom: 14px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+
+    strong {
+      color: #0969da;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin: 20px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background-color: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-accent-gold { 
+      border-top: 4px solid var(--accent-gold); 
+      background-color: #fffdf5;
+    }
+    .card-accent-blue { 
+      border-top: 4px solid var(--accent-navy); 
+      background-color: #f7fbff;
+    }
+    .card-accent-green { 
+      border-top: 4px solid var(--accent-green); 
+      background-color: #f6fdf7;
+    }
+    .card-accent-purple { 
+      border-top: 4px solid var(--accent-purple); 
+      background-color: #fcf8ff;
+    }
+    .card-accent-red { 
+      border-top: 4px solid var(--accent-red); 
+      background-color: #fff8f7;
+    }
+
+    .audit-box {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      font-size: 0.98rem;
+    }
+
+    .audit-good {
+      background: var(--accent-green-bg);
+      border-left: 5px solid var(--accent-green);
+      border-right: 1px solid #b4f1c5;
+      border-top: 1px solid #b4f1c5;
+      border-bottom: 1px solid #b4f1c5;
+      color: #0d441e;
+    }
+
+    .audit-bad {
+      background: var(--accent-red-bg);
+      border-left: 5px solid var(--accent-red);
+      border-right: 1px solid #ffd0cc;
+      border-top: 1px solid #ffd0cc;
+      border-bottom: 1px solid #ffd0cc;
+      color: #67060c;
+    }
+
+    .audit-improve {
+      background: var(--accent-gold-bg);
+      border-left: 5px solid var(--accent-gold-border);
+      border-right: 1px solid var(--accent-gold-border);
+      border-top: 1px solid var(--accent-gold-border);
+      border-bottom: 1px solid var(--accent-gold-border);
+      color: #4d2d00;
+    }
+
+    .audit-title {
+      font-weight: 800;
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .qa-box {
+      background: #f0f7ff;
+      border: 1px solid #c8e1ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .qa-question {
+      font-weight: 700;
+      color: var(--accent-navy);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .qa-answer {
+      color: #24292f;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .formula-card {
+      background: #f8fafc;
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin: 16px 0;
+      font-size: 1.15rem;
+      color: #0969da;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.94rem;
+      background-color: #ffffff;
+    }
+
+    table.custom-table th, 
+    table.custom-table td {
+      padding: 12px 14px;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+    }
+
+    table.custom-table th {
+      background-color: #f1f5f9;
+      color: var(--accent-navy-dark);
+      font-weight: 700;
+    }
+
+    table.custom-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    footer {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .slide-counter {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      background: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #eef2f6;
+      border-color: var(--border-strong);
+      color: #0969da;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #1f883d;
+      border-color: #1a7f37;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1a7f37;
+      color: #ffffff;
+    }
+
+    .slide::-webkit-scrollbar {
+      width: 8px;
+    }
+    .slide::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .slide::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .kbd {
+      background: #f1f5f9;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: #24292f;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Progresso Superior -->
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header>
+    <div class="header-title">
+      <span>Capacitação Estatística para Defesa de Tese</span>
+      <span class="header-badge">Encontro 2 de 4</span>
+    </div>
+    <div style="font-size: 0.88rem; color: var(--text-muted);">
+      Doutoranda: <strong style="color: #24292f;">Vanna Coelho Cabral</strong> | PPGEduCS / UNIVÁS
+    </div>
+  </header>
+
+  <!-- Viewport dos Slides -->
+  <main class="slider-viewport">
+
+    <!-- SLIDE 1: Abertura e Plano da Sessão 2 -->
+    <section class="slide active" data-slide="1">
+      <div style="margin-bottom: 20px;">
+        <span class="header-badge">Módulo 2: Estatística Descritiva e Testes de Aderência à Normalidade</span>
+        <h1 style="margin-top: 10px;">A Batalha da Normalidade: Kolmogorov-Smirnov, Shapiro-Wilk, Assimetria e Curtose</h1>
+        <p style="color: var(--accent-navy); font-weight: 600; font-size: 1.05rem;">
+          Objetivo da Sessão: Ensinar à doutoranda a lógica matemática e psicométrica da não normalidade dos dados (Capítulo 4.2 da Tese), capacitando-a para justificar por que a distribuição exigiu testes não paramétricos.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy);">O que Ensinar à Vanna Hoje</h3>
+          <ul style="font-size: 0.9rem;">
+            <li>A diferença entre medidas de tendência central: quando usar Média vs. Mediana.</li>
+            <li>O significado prático do Desvio-Padrão e da dispersão amostral.</li>
+            <li>A hipótese nula ($H_0$) e alternativa ($H_1$) nos testes de normalidade.</li>
+            <li>Por que Kolmogorov-Smirnov e Shapiro-Wilk resultaram ambos em $p < 0{,}05$.</li>
+            <li>O conceito de Assimetria (efeito teto/concentração superior) e Curtose (leptocurtose).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold);">Onde a Aluna Mais Precisa de Apoio</h3>
+          <ul style="font-size: 0.9rem;">
+            <li>Entender que $p < 0{,}05$ aqui <strong>rejeita a normalidade</strong> (em testes de normalidade, $p$ pequeno significa que a distribuição não é gaussiana).</li>
+            <li>Articular a justificativa técnica para o uso da Correlação de Spearman no Encontro 3.</li>
+            <li>Saber explicar por que a regressão linear foi mantida mesmo com dados não normais (Teorema Central do Limite e normalidade dos resíduos).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple);">Localização no Texto da Tese</h3>
+          <p style="font-size: 0.9rem;">
+            Este encontro disseca integralmente:
+          </p>
+          <ul style="font-size: 0.88rem;">
+            <li><strong>Seção 3.8:</strong> Procedimentos de Análise Estatística (p. 31-32).</li>
+            <li><strong>Seção 4.2:</strong> Distribuição das Variáveis (p. 35-36).</li>
+            <li><strong>Tabela 2:</strong> Parâmetros de Distribuição, Média, Mediana, Assimetria e Curtose (p. 36).</li>
+            <li><strong>Tabelas 3 e 4:</strong> Descritivas de Autoeficácia e Qualidade de Vida (p. 37).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">Diretriz Pedagógica para o Instrutor</div>
+        Não trate a não normalidade como um "defeito" dos dados de Vanna. Na psicometria educacional, dados de autoavaliação são <strong>naturalmente assimétricos</strong>. O domínio dessa explicação demonstra sofisticação e maturidade científica perante qualquer banca examinadora.
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Estatística Descritiva: Média, Mediana e Desvio-Padrão -->
+    <section class="slide" data-slide="2">
+      <h2>1. Anatomia Descritiva: Média, Mediana e Dispersão</h2>
+      <p>
+        Antes de testar hipóteses ou associações, a estatística organiza e sintetiza o comportamento dos 193 discentes. A doutoranda deve dominar a distinção prática entre medidas de centro e de dispersão.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy);">Medidas de Tendência Central</h3>
+          <p style="font-size: 0.92rem;">
+            <strong>Média Aritmética ($\bar{X}$):</strong> Ponto de equilíbrio gravitacional de todos os escores. É sensível a valores extremos (outliers).
+          </p>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$\bar{X} = \frac{\sum_{i=1}^{n} X_i}{n}$$
+          </div>
+          <p style="font-size: 0.92rem;">
+            <strong>Mediana ($Md$):</strong> Ponto central que divide a amostra ordenada exatamente ao meio (percentil 50). Não sofre distorção por casos atípicos nos extremos.
+          </p>
+          <p style="font-size: 0.92rem; color: var(--accent-navy-dark);">
+            <strong>Regra de Ouro:</strong> Se a distribuição fosse perfeitamente simétrica (normal), Média e Mediana seriam <strong>idênticas</strong>. Quando divergem, há inclinação na distribuição.
+          </p>
+        </div>
+
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green);">Medidas de Dispersão e Variabilidade</h3>
+          <p style="font-size: 0.92rem;">
+            <strong>Desvio-Padrão ($DP$ ou $s$):</strong> A distância média quadrática que as respostas individuais se afastam da média aritmética do grupo.
+          </p>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$s = \sqrt{\frac{\sum_{i=1}^{n} (X_i - \bar{X})^2}{n - 1}}$$
+          </div>
+          <p style="font-size: 0.92rem;">
+            <strong>Amplitude Total:</strong> A distância entre o valor mínimo e o máximo registrado na amostra.
+          </p>
+          <p style="font-size: 0.92rem; color: var(--accent-green);">
+            <strong>Interpretação na Tese:</strong> Um $DP$ pequeno indica coesão e homogeneidade no grupo; um $DP$ elevado (como $20{,}30$ em Relações Sociais) indica extrema heterogeneidade entre os alunos.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">Ponto Forte na Tese da Vanna</div>
+        A Tabela 2 reportou simultaneamente <strong>Média e Mediana</strong> para todas as 9 variáveis centrais. Isso atende às melhores diretrizes de reporte psicométrico internacional (APA), permitindo ao leitor visualizar a assimetria antes mesmo de consultar os testes formais.
+      </div>
+    </section>
+
+    <!-- SLIDE 3: O Pressuposto da Distribuição Normal (Curva de Gauss) -->
+    <section class="slide" data-slide="3">
+      <h2>2. O Que é a Distribuição Normal e Por Que Ela Importa?</h2>
+      <p>
+        A distribuição normal (ou gaussiana) é o modelo teórico de probabilidade mais célebre da estatística. Ela serve como pressuposto fundamental para testes paramétricos clássicos (como o teste $t$ de Student, ANOVA e Correlação de Pearson).
+      </p>
+
+      <div class="card">
+        <h3 style="color: var(--accent-navy); margin-top:0;">Propriedades Teóricas da Curva Gaussiana Ideal</h3>
+        <div class="grid-3" style="font-size: 0.92rem; margin-top: 10px;">
+          <div>
+            <strong>1. Simetria Perfeita</strong><br>
+            A curva tem formato de sino (bell-shaped). O lado esquerdo é um espelho exato do lado direito. Portanto, $\text{Média} = \text{Mediana} = \text{Moda}$.
+          </div>
+          <div>
+            <strong>2. Regra Empírica 68-95-99,7</strong><br>
+            $68{,}26\%$ das observações ficam a $\pm 1\,DP$ da média; $95{,}44\%$ a $\pm 2\,DP$; e $99{,}74\%$ a $\pm 3\,DP$.
+          </div>
+          <div>
+            <strong>3. Índices Nulos de Forma</strong><br>
+            O coeficiente de Assimetria (Skewness) é rigorosamente <strong>0,00</strong> e o coeficiente de Curtose (Kurtosis) é <strong>0,00</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 20px;">
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple); margin-top:0;">Por Que Variáveis Psicológicas Desviam da Normal?</h3>
+          <p style="font-size: 0.93rem;">
+            Na física e na biometria pura (ex: altura ou pressão arterial), a distribuição normal predomina. Mas em <strong>escalas psicométricas de autoavaliação</strong>:
+          </p>
+          <ul style="font-size: 0.9rem;">
+            <li>Estudantes universitários tendem a se avaliar com notas moderadas ou altas (autoindulgência ou viés de desejabilidade social).</li>
+            <li>A escala tem limites físicos estritos (de 1 a 10, ou 0 a 100), provocando represamento de respostas nos extremos (efeito teto).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">A Consequência Metodológica Direta</h3>
+          <p style="font-size: 0.93rem;">
+            Se os dados violam a normalidade gaussiana:
+          </p>
+          <ul style="font-size: 0.9rem;">
+            <li>O coeficiente de <strong>Pearson</strong> perde sua validade, pois assume linearidade e normalidade bivariada estrita.</li>
+            <li>Torna-se <strong>mandatório</strong> migrar para métodos baseados em postos (ranks), como a <strong>Correlação de Spearman ($r_s$)</strong>, exatamente como Vanna procedeu.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-bad">
+        <div class="audit-title">Erro Comum que a Vanna Não Pode Cometer</div>
+        Nunca dizer: <em>"Infelizmente meus dados deram anormais"</em>. Na ciência, a expressão correta é: <strong>"Os dados apresentaram afastamento estatisticamente significativo da distribuição normal teórica."</strong> Não há juízo de valor pejorativo.
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Os Testes Formais: Kolmogorov-Smirnov vs. Shapiro-Wilk -->
+    <section class="slide" data-slide="4">
+      <h2>3. Os Testes Formais de Aderência: Kolmogorov-Smirnov e Shapiro-Wilk</h2>
+      <p>
+        A tese aplicou dois testes inferenciais de normalidade (Seção 4.2, p. 35). A aluna precisa entender exatamente qual é o teste de hipótese executado pelos softwares.
+      </p>
+
+      <div class="card card-accent-blue" style="margin-bottom: 20px;">
+        <h3 style="color: var(--accent-navy); margin-top:0;">A Formulação das Hipóteses Estatísticas</h3>
+        <p style="font-size: 0.95rem;">Diferente de testes comuns (onde se busca o efeito), nos testes de aderência à normalidade:</p>
+        <div class="grid-2">
+          <div class="formula-card" style="font-size: 1rem; text-align: left; padding: 14px;">
+            <strong style="color: var(--accent-green);">Hipótese Nula ($H_0$):</strong><br>
+            A amostra <strong>provém</strong> de uma população com distribuição normal ($p \ge 0{,}05$). Os dados são gaussianos.
+          </div>
+          <div class="formula-card" style="font-size: 1rem; text-align: left; padding: 14px;">
+            <strong style="color: var(--accent-red);">Hipótese Alternativa ($H_1$):</strong><br>
+            A amostra <strong>não provém</strong> de uma população normal ($p < 0{,}05$). Há afastamento da normalidade.
+          </div>
+        </div>
+      </div>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Critério</th>
+            <th style="width: 38%;">Teste de Kolmogorov-Smirnov (KS)</th>
+            <th style="width: 37%;">Teste de Shapiro-Wilk (SW)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Mecanismo Matemático</strong></td>
+            <td>Compara a função de distribuição cumulativa empírica dos dados $F_n(x)$ com a distribuição normal teórica $F_0(x)$, buscando a distância vertical máxima ($D$).</td>
+            <td>Calcula a razão entre a melhor estimativa linear da variância (baseada em estatísticas de ordem) e a soma de quadrados amostral padrão ($W$).</td>
+          </tr>
+          <tr>
+            <td><strong>Indicação de Amostra</strong></td>
+            <td>Historicamente recomendado para grandes amostras ($N > 50$ ou $N > 100$). No SPSS, vem com correção de significância de Lilliefors.</td>
+            <td>Padrão ouro em psicometria e biometria; possui maior poder estatístico para identificar desvios sutis em amostras pequenas e médias ($N < 500$).</td>
+          </tr>
+          <tr>
+            <td><strong>Resultado na Tese (Tabela 2)</strong></td>
+            <td><strong>$p < 0{,}05$</strong> para todas as dimensões de autoeficácia e domínios de qualidade de vida.</td>
+            <td><strong>$p < 0{,}05$</strong> para todas as dimensões de autoeficácia e domínios de qualidade de vida.</td>
+          </tr>
+          <tr>
+            <td><strong>Decisão Incontestável</strong></td>
+            <td colspan="2" style="text-align: center; font-weight: 700; color: var(--accent-red);">
+              Rejeição peremptória de $H_0$. Ambas as abordagens convergiram na conclusão de ausência de normalidade estatística.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">Dica Crucial de Defesa para a Vanna</div>
+        <em>"Professor(a), aplicamos tanto o Kolmogorov-Smirnov quanto o Shapiro-Wilk por recomendação metodológica para conferir redundância e solidez. Como ambos acusaram $p < 0{,}05$ em 100% das variáveis, a decisão por procedimentos não paramétricos na análise correlacional tornou-se estritamente obrigatória."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Raio-X da Tabela 2 da Tese: Assimetria e Curtose -->
+    <section class="slide" data-slide="5">
+      <h2>4. Dissecando a Tabela 2 da Tese: Assimetria e Curtose</h2>
+      <p>
+        O teste formal diz apenas "sim ou não" para a normalidade. São os coeficientes de <strong>Assimetria (Skewness)</strong> e <strong>Curtose (Kurtosis)</strong> que revelam a verdadeira morfologia da distribuição dos 193 estudantes.
+      </p>
+
+      <table class="custom-table" style="font-size: 0.9rem;">
+        <thead>
+          <tr>
+            <th>Variável Investigada</th>
+            <th>Média</th>
+            <th>Mediana</th>
+            <th>Assimetria</th>
+            <th>Diagnóstico de Assimetria</th>
+            <th>Curtose</th>
+            <th>Diagnóstico de Curtose</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Autoeficácia Acadêmica (AA)</strong></td>
+            <td>7,37</td>
+            <td>7,66</td>
+            <td style="color: var(--accent-red); font-weight: 700;">−1,398</td>
+            <td>Negativa Severa (Cauda à esquerda)</td>
+            <td>2,055</td>
+            <td>Leptocúrtica (Pico elevado)</td>
+          </tr>
+          <tr>
+            <td><strong>Interação Social (AIS)</strong></td>
+            <td>7,17</td>
+            <td>7,57</td>
+            <td style="color: var(--accent-red); font-weight: 700;">−1,180</td>
+            <td>Negativa Severa</td>
+            <td>1,509</td>
+            <td>Leptocúrtica</td>
+          </tr>
+          <tr>
+            <td><strong>Ações Proativas (AAP)</strong></td>
+            <td>6,87</td>
+            <td>7,28</td>
+            <td style="color: var(--accent-red); font-weight: 700;">−1,162</td>
+            <td>Negativa Severa</td>
+            <td>1,388</td>
+            <td>Leptocúrtica</td>
+          </tr>
+          <tr>
+            <td><strong>Gestão Acadêmica (AGA)</strong></td>
+            <td>7,45</td>
+            <td>8,00</td>
+            <td style="color: var(--accent-red); font-weight: 700;">−1,592</td>
+            <td>Mais Assimétrica da Tese</td>
+            <td>2,253</td>
+            <td>Leptocúrtica Acentuada</td>
+          </tr>
+          <tr>
+            <td><strong>Regulação da Formação (ARF)</strong></td>
+            <td>7,26</td>
+            <td>7,57</td>
+            <td style="color: var(--accent-red); font-weight: 700;">−1,510</td>
+            <td>Negativa Severa</td>
+            <td>2,263</td>
+            <td>Mais Afilada da Tese</td>
+          </tr>
+          <tr>
+            <td><strong>Domínio Físico (WHOQOL)</strong></td>
+            <td>66,70</td>
+            <td>67,80</td>
+            <td style="color: var(--accent-navy); font-weight: 700;">−0,449</td>
+            <td>Negativa Leve (Quase normal)</td>
+            <td>0,092</td>
+            <td>Mesocúrtica (Forma ideal)</td>
+          </tr>
+          <tr>
+            <td><strong>Domínio Psicológico (WHOQOL)</strong></td>
+            <td>63,00</td>
+            <td>62,50</td>
+            <td style="color: var(--accent-navy); font-weight: 700;">−0,326</td>
+            <td>Negativa Leve (Mais simétrica)</td>
+            <td>−0,235</td>
+            <td>Platicúrtica Leve (Levemente achatada)</td>
+          </tr>
+          <tr>
+            <td><strong>Relações Sociais (WHOQOL)</strong></td>
+            <td>67,50</td>
+            <td>66,60</td>
+            <td style="color: var(--accent-navy); font-weight: 700;">−0,446</td>
+            <td>Negativa Leve</td>
+            <td>−0,111</td>
+            <td>Mesocúrtica</td>
+          </tr>
+          <tr>
+            <td><strong>Meio Ambiente (WHOQOL)</strong></td>
+            <td>69,40</td>
+            <td>71,80</td>
+            <td style="color: var(--accent-navy); font-weight: 700;">−0,462</td>
+            <td>Negativa Leve</td>
+            <td>−0,041</td>
+            <td>Mesocúrtica</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-2" style="margin-top: 15px;">
+        <div class="audit-box audit-good">
+          <div class="audit-title">Achado Metodológico Vital</div>
+          Note a divergência clara: as 5 dimensões de <strong>Autoeficácia</strong> são intensamente assimétricas (todas abaixo de $-1{,}16$) e leptocúrticas. Já os 4 domínios de <strong>Qualidade de Vida</strong> têm assimetria contida (entre $-0{,}32$ e $-0{,}46$) e curtose praticamente nula.
+        </div>
+        <div class="audit-box audit-improve">
+          <div class="audit-title">O que Isso Significa na Prática?</div>
+          Quem "derrubou" a normalidade do banco de dados foi primordialmente a <strong>Escala de Autoeficácia</strong>, na qual os alunos concentraram respostas massivamente nas notas 7, 8, 9 e 10 (efeito teto de autoavaliação).
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: O Conceito Matemático de Assimetria (Skewness) -->
+    <section class="slide" data-slide="6">
+      <h2>5. Decodificando a Assimetria: Por Que o Sinal é Negativo?</h2>
+      <p>
+        Uma pergunta que desestabiliza alunos despreparados é: <em>"O que significa dizer que a assimetria da Gestão Acadêmica foi de −1,592?"</em>. Vanna deve responder com segurança geométrica e comportamental.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-red">
+          <h3 style="color: var(--accent-red); margin-top:0;">O Sinal Negativo: Cauda à Esquerda</h3>
+          <p style="font-size: 0.92rem;">
+            Assimetria negativa (ou <em>left-skewed</em>) <strong>NÃO significa notas baixas ou negativas</strong>. Significa exatamente o inverso:
+          </p>
+          <ul style="font-size: 0.9rem;">
+            <li>A <strong>massa de respostas</strong> está concentrada nos valores elevados da escala (notas 8, 9 e 10).</li>
+            <li>A "cauda" longa e fina da distribuição estende-se para a esquerda (poucos estudantes pontuaram notas muito baixas, como 1, 2 ou 3).</li>
+            <li>Consequência matemática invariável: a <strong>Mediana é superior à Média</strong> ($\text{Mediana } 8{,}00 > \text{Média } 7{,}45$).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">O Fenômeno do "Efeito Teto" (Ceiling Effect)</h3>
+          <p style="font-size: 0.92rem;">
+            Na psicologia da autoeficácia, o sujeito que frequenta o ensino superior raramente admite para si mesmo ou no questionário que é "totalmente incapaz" de cumprir prazos (AGA) ou estudar matérias (AA).
+          </p>
+          <div class="formula-card" style="font-size: 0.95rem; background: #fff;">
+            $$\text{Skewness} = \frac{n}{(n-1)(n-2)} \sum_{i=1}^n \left(\frac{X_i - \bar{X}}{s}\right)^3$$
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            O expoente cúbico preserva o sinal negativo dos desvios abaixo da média, evidenciando os poucos estudantes de baixa autoeficácia.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">Argumento Pedagógico para a Apresentação Oral</div>
+        <em>"A assimetria negativa observada em todas as dimensões de autoeficácia expressa o perfil adaptativo dos estudantes de Direito investigados: trata-se de um corpo discente com forte percepção de competência acadêmica instalada. A cauda à esquerda representa a minoria vulnerável que vivencia sentimento agudo de incapacidade formativa."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: O Conceito Matemático de Curtose (Kurtosis) -->
+    <section class="slide" data-slide="7">
+      <h2>6. Decodificando a Curtose: O Achatamento e o Pico</h2>
+      <p>
+        A curtose mede o grau de achatamento da curva em relação à curva normal padrão, indicando o peso das caudas e a concentração em torno do centro da distribuição.
+      </p>
+
+      <div class="grid-3">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Leptocúrtica (Curtose > 0)</h3>
+          <p style="font-size: 0.9rem;">
+            Curva excessivamente "pontiaguda" ou afunilada. Há forte concentração de dados ao redor da média e caudas pesadas.
+          </p>
+          <div class="formula-card" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-navy);">
+            Curtose entre +1,38 e +2,26
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Todas as 5 dimensões de Autoeficácia da tese são leptocúrticas. Os estudantes pensam de forma muito homogênea no centro.
+          </p>
+        </div>
+
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Mesocúrtica (Curtose ≈ 0)</h3>
+          <p style="font-size: 0.9rem;">
+            Curva com elevação ideal, idêntica ao modelo teórico gaussiano normal.
+          </p>
+          <div class="formula-card" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-green);">
+            Curtose próxima de 0,00
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Os domínios Físico ($0{,}092$), Meio Ambiente ($-0{,}041$) e Sociais ($-0{,}111$) comportam-se como mesocúrticos perfeitos.
+          </p>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">Platicúrtica (Curtose < 0)</h3>
+          <p style="font-size: 0.9rem;">
+            Curva mais achatada que a normal, espalhada horizontalmente, com caudas mais leves.
+          </p>
+          <div class="formula-card" style="font-size: 0.9rem; font-weight: 700; color: var(--accent-gold);">
+            Curtose negativa
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            O Domínio Psicológico exibiu curtose de $-0{,}235$, indicando maior espalhamento das respostas discentes sobre saúde mental.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">Por que os Testes Rejeitaram a Normalidade no WHOQOL se a Assimetria e a Curtose Eram Baixas?</div>
+        Essa é uma pergunta clássica de estatísticos em bancas!
+        <br><strong>A resposta técnica da Vanna:</strong> <em>"Embora os domínios do WHOQOL tenham exibido assimetria e curtose dentro dos limites aceitáveis para normalidade univariada univariada aproximada (valores entre $-1$ e $+1$), os testes formais de Kolmogorov-Smirnov e Shapiro-Wilk têm elevado poder para amostras com $N = 193$, sendo capazes de detectar pequenas descontinuidades discretas decorrentes da escala Likert original de 5 pontos, acusando significância estatística ($p < 0{,}05$)."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: A Conexão Crítica: Por Que Usar Spearman em Vez de Pearson? -->
+    <section class="slide" data-slide="8">
+      <h2>7. O Impacto Direto: A Escolha da Correlação de Spearman</h2>
+      <p>
+        A constatação da ausência de normalidade na Tabela 2 não é um exercício teórico abstrato: ela ditou a escolha do teste de correlação utilizado na Tabela 5 da tese (assunto do Encontro 3).
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-red">
+          <h3 style="color: var(--accent-red); margin-top:0;">Correlação Linear de Pearson ($r$)</h3>
+          <ul style="font-size: 0.92rem;">
+            <li><strong>Natureza:</strong> Teste estritamente paramétrico.</li>
+            <li><strong>Pressuposto Rígido:</strong> Exige que ambas as variáveis tenham distribuição normal contínua bivariada.</li>
+            <li><strong>Risco no Trabalho de Vanna:</strong> Se aplicado aos dados de autoeficácia com assimetria de $-1{,}59$, geraria coeficientes distorcidos pelo represamento de escores altos.</li>
+            <li><strong>Veredito:</strong> Inaplicável ou metodologicamente temerário para o conjunto de dados da tese.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Correlação de Postos de Spearman ($r_s$ ou $\rho$)</h3>
+          <ul style="font-size: 0.92rem;">
+            <li><strong>Natureza:</strong> Teste não paramétrico robusto.</li>
+            <li><strong>Mecanismo:</strong> Converte os valores brutos em postos ordenados (ranks de $1$ a $193$) e afere a relação monotônica entre os postos.</li>
+            <li><strong>Vantagem:</strong> É completamente imune à assimetria negativa, à curtose e a valores discrepantes moderados.</li>
+            <li><strong>Veredito:</strong> A escolha metodológica correta, adotada com precisão no Capítulo 3.8 e 4.5 da tese.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">Coerência Metodológica Elogiável</div>
+        A tese estabeleceu uma ponte de consistência perfeita: <strong>Capítulo 4.2 atesta a não normalidade $\implies$ Capítulo 4.5 adota correlação não paramétrica de Spearman</strong>. A banca não terá como questionar essa transição.
+      </div>
+    </section>
+
+    <!-- SLIDE 9: O Paradoxo da Regressão Linear: Pode Usar Regressão com Dados Não Normais? -->
+    <section class="slide" data-slide="9">
+      <h2>8. O Paradoxo Técnico: Por Que Fazer Regressão Linear com Dados Não Normais?</h2>
+      <p>
+        Atenção máxima neste slide: aqui reside a pergunta mais difícil e perigosa que um estatístico da banca pode fazer à Vanna.
+      </p>
+
+      <div class="card card-accent-gold" style="margin-bottom: 20px;">
+        <h3 style="color: var(--accent-gold); margin-top: 0;">A Pegadinha Mortal da Banca</h3>
+        <p style="font-size: 1.05rem; color: #24292f; font-style: italic;">
+          "Candidata, se no item 4.2 da sua tese a senhora provou que todas as variáveis violam a normalidade ($p < 0{,}05$), como teve a audácia de aplicar Modelos de Regressão Linear Múltipla no item 4.6, que é um método paramétrico clássico?"
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">1. O Pressuposto Real da Regressão Linear</h3>
+          <p style="font-size: 0.92rem;">
+            O pressuposto de normalidade da regressão linear <strong>NÃO exige que as variáveis $X$ (preditoras) ou $Y$ (desfecho) sejam normais isoladamente</strong>!
+          </p>
+          <p style="font-size: 0.92rem;">
+            O pressuposto exige exclusivamente que os <strong>resíduos do modelo ($\varepsilon_i = Y_i - \hat{Y}_i$) tenham distribuição aproximadamente normal</strong>.
+          </p>
+          <p style="font-size: 0.9rem; color: var(--accent-navy-dark);">
+            No Capítulo 3.8 (p. 32), a tese afirma textualmente que examinou os <em>"resíduos padronizados"</em> dos modelos.
+          </p>
+        </div>
+
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">2. O Teorema Central do Limite (TCL)</h3>
+          <p style="font-size: 0.92rem;">
+            Pelo Teorema Central do Limite, para amostras suficientemente grandes ($N > 30$ ou, no caso da tese, <strong>$N = 193$</strong>), a distribuição amostral dos estimadores dos coeficientes de regressão ($\hat{\beta}$) aproxima-se assintoticamente da normalidade, independentemente da distribuição das variáveis originais.
+          </p>
+          <p style="font-size: 0.9rem; color: var(--accent-green);">
+            A regressão linear por Mínimos Quadrados Ordinários (OLS) é <strong>robusta a desvios moderados de normalidade</strong> quando a amostra é expressiva.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">A Resposta Pronta para a Vanna Gravar e Arrasar na Banca</div>
+        <em>"Professor(a), essa é uma distinção conceitual crucial: a não normalidade univariada das variáveis brutas nos impediu de usar a Correlação de Pearson bivariada, exigindo Spearman. Todavia, na Regressão Linear Múltipla, o pressuposto de normalidade recai sobre o <strong>termo de erro estocástico (resíduos)</strong>, e não sobre as variáveis isoladas. Além disso, com $N = 193$, o Teorema Central do Limite assegura a consistência assintótica e a validade dos testes $F$ e $t$ dos coeficientes estimados."</em> (A banca aplaude de pé!).
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Simulação de Sabatina - Perguntas do Encontro 2 -->
+    <section class="slide" data-slide="10">
+      <h2>9. Simulação de Sabatina: O Roteiro de Respostas da Vanna</h2>
+      <p>
+        Treinamento direto de argumentação para as perguntas sobre exploração de dados e testes de hipótese de normalidade.
+      </p>
+
+      <div class="qa-box">
+        <div class="qa-question">Examinador: "Olhando sua Tabela 2, por que em todas as dimensões de autoeficácia a Mediana é maior que a Média?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Vanna:</strong> <em>"Isso decorre do coeficiente de assimetria negativa verificado em todas as dimensões. Como a grande maioria dos discentes concentrou suas respostas nas pontuações superiores da escala (7 a 10), a mediana – que reflete o percentil 50 – posiciona-se no topo. A média aritmética, por sua vez, é puxada ligeiramente para baixo pelos poucos participantes que pontuaram valores reduzidos na cauda esquerda da distribuição."</em>
+        </div>
+      </div>
+
+      <div class="qa-box">
+        <div class="qa-question">Examinador: "Por que você relatou tanto Kolmogorov-Smirnov quanto Shapiro-Wilk na tese? Um não seria suficiente?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Vanna:</strong> <em>"Embora o teste de Shapiro-Wilk apresente maior poder estatístico em psicometria, o Kolmogorov-Smirnov com correção de Lilliefors é amplamente consagrado em estudos da saúde e educação. Reportar ambos demonstrou convergência e redundância probatória: como os dois testes rejeitaram a hipótese nula de normalidade com $p < 0{,}05$, eliminou-se qualquer dúvida metodológica sobre a natureza não paramétrica dos nossos dados univariados."</em>
+        </div>
+      </div>
+
+      <div class="qa-box">
+        <div class="qa-question">Examinador: "Se o Domínio Psicológico teve assimetria de apenas −0,326 e curtose de −0,235, ele não poderia ser tratado como normal?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Vanna:</strong> <em>"Em termos práticos univariados, ele apresenta um formato próximo ao mesocúrtico. Contudo, ao cruzá-lo nas correlações bivariadas com a Autoeficácia na Regulação da Formação (que possui assimetria severa de $-1{,}510$), a distribuição conjunta deixa de ser normal bivariada. O uso de Spearman preservou a isonomia e o rigor métrico em toda a matriz de análise."</em>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Síntese e Preparação para o Encontro 3 -->
+    <section class="slide" data-slide="11">
+      <h2>10. Síntese do Encontro 2 e Missão para o Encontro 3</h2>
+      <p>
+        Consolidação da segunda etapa da mentoria estatística.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">O que Ficou Solidificado Hoje</h3>
+          <ul style="font-size: 0.9rem;">
+            <li>Média vs. Mediana: desvios explicados pela assimetria.</li>
+            <li>Testes formais: $H_0$ de normalidade rejeitada ($p < 0{,}05$ em KS e SW).</li>
+            <li>Assimetria Negativa: concentração no topo da escala (efeito teto na autoavaliação).</li>
+            <li>Curtose Leptocúrtica: pico elevado e homogeneidade nas dimensões de autoeficácia.</li>
+            <li>A ponte lógica: dados não normais exigem Correlação de Spearman.</li>
+            <li>A blindagem da regressão: normalidade de resíduos e Teorema Central do Limite ($N = 193$).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Pauta do Encontro 3: "Correlações de Spearman"</h3>
+          <p style="font-size: 0.9rem;">No próximo encontro de 1 hora, vamos mergulhar na <strong>Tabela 5 da tese</strong>:</p>
+          <ul style="font-size: 0.9rem;">
+            <li>Como funciona o coeficiente $r_s$ (a matemática dos postos/ranks).</li>
+            <li>Classificação de magnitude das correlações (fraca, moderada, forte).</li>
+            <li>Por que o Domínio Psicológico teve a correlação mais forte com Regulação da Formação ($r_s = 0{,}377$).</li>
+            <li>O enigma da Gestão Acadêmica: por que ela NÃO se correlacionou com os domínios Físico e Social?</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve" style="text-align: center; margin-top: 15px;">
+        <div class="audit-title" style="display: block;">Tarefa Prática para a Vanna</div>
+        <em>"Abra a Tabela 2 na página 36 da sua tese. Observe os valores de Assimetria e Curtose e recite em voz alta as justificativas aprendidas hoje. Quando a banca perguntar sobre normalidade, você terá a resposta mais elegante de toda a sessão!"</em>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé e Navegação -->
+  <footer>
+    <div class="slide-counter" id="slideCounter">Slide 1 de 11</div>
+    <div style="display: flex; gap: 8px; align-items: center; color: var(--text-muted); font-size: 0.88rem;">
+      <span class="kbd">←</span> <span class="kbd">→</span> Navegação pelo teclado | <span class="kbd">Espaço</span> Avançar
+    </div>
+    <div class="nav-controls">
+      <button class="btn" id="prevBtn" disabled>
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+        Anterior
+      </button>
+      <button class="btn btn-primary" id="nextBtn">
+        Próximo
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Script de Controle dos Slides -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentSlide = 1;
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressBar = document.getElementById('progressBar');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 1 || newIndex > totalSlides) return;
+
+        slides.forEach(slide => {
+          slide.classList.remove('active');
+        });
+
+        currentSlide = newIndex;
+        const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+        if (activeSlide) {
+          activeSlide.classList.add('active');
+          activeSlide.scrollTop = 0;
+        }
+
+        prevBtn.disabled = (currentSlide === 1);
+        nextBtn.disabled = (currentSlide === totalSlides);
+
+        slideCounter.textContent = `Slide ${currentSlide} de ${totalSlides}`;
+
+        const progressPct = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+        progressBar.style.width = `${progressPct}%`;
+
+        // Reprocessamento das fórmulas matemáticas no slide ativo
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([activeSlide]);
+        }
+      }
+
+      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+      nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Spacebar' || e.key === ' ') {
+          e.preventDefault();
+          updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(1);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides);
+        }
+      });
+
+      updateSlide(1);
+    });
+  </script>
+</body>
+</html>

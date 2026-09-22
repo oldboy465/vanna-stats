@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encontro 1: Metodologia, Delineamento e Dimensionamento Amostral | Mentoria Estatística Tese Vanna Cabral</title>
+  
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #f4f6f9;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --border-subtle: #d0d7de;
+      --border-strong: #afb8c1;
+      --text-main: #1f2328;
+      --text-muted: #57606a;
+      --accent-navy: #0969da;
+      --accent-navy-dark: #054da7;
+      --accent-gold: #9a6700;
+      --accent-gold-bg: #fff8c5;
+      --accent-gold-border: #d4a72c;
+      --accent-cyan: #057a85;
+      --accent-green: #1a7f37;
+      --accent-green-bg: #dafbe1;
+      --accent-red: #cf222e;
+      --accent-purple: #8250df;
+      --accent-purple-bg: #fbefff;
+      --gradient-header: linear-gradient(135deg, #0969da 0%, #8250df 100%);
+      --shadow-elevation: 0 4px 20px rgba(140, 149, 159, 0.2);
+      --shadow-card: 0 2px 8px rgba(140, 149, 159, 0.12);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-badge {
+      background: #ddf4ff;
+      color: #0969da;
+      border: 1px solid #54aeff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #e1e4e8;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--gradient-header);
+      transition: width 0.3s ease;
+    }
+
+    .slider-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 94%;
+      max-width: 1240px;
+      height: 84vh;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 40px 50px;
+      box-shadow: var(--shadow-elevation);
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(16px) scale(0.99);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: text;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #1f2328;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      margin-bottom: 22px;
+      border-bottom: 2px solid #eaeef2;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #24292f;
+      margin: 18px 0 10px 0;
+    }
+
+    p {
+      color: var(--text-main);
+      font-size: 1.02rem;
+      margin-bottom: 14px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-main);
+      font-size: 1rem;
+    }
+
+    strong {
+      color: #0969da;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin: 20px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 20px 0;
+    }
+
+    .card {
+      background-color: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-accent-gold { 
+      border-top: 4px solid var(--accent-gold); 
+      background-color: #fffdf5;
+    }
+    .card-accent-blue { 
+      border-top: 4px solid var(--accent-navy); 
+      background-color: #f7fbff;
+    }
+    .card-accent-green { 
+      border-top: 4px solid var(--accent-green); 
+      background-color: #f6fdf7;
+    }
+    .card-accent-purple { 
+      border-top: 4px solid var(--accent-purple); 
+      background-color: #fcf8ff;
+    }
+
+    .banca-alert {
+      background: var(--accent-gold-bg);
+      border-left: 5px solid var(--accent-gold-border);
+      border-right: 1px solid var(--accent-gold-border);
+      border-top: 1px solid var(--accent-gold-border);
+      border-bottom: 1px solid var(--accent-gold-border);
+      border-radius: 8px;
+      padding: 16px 22px;
+      margin: 22px 0;
+      color: #4d2d00;
+    }
+
+    .banca-alert-title {
+      font-weight: 800;
+      color: var(--accent-gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .qa-box {
+      background: #f0f7ff;
+      border: 1px solid #c8e1ff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .qa-question {
+      font-weight: 700;
+      color: var(--accent-navy);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .qa-answer {
+      color: #24292f;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .formula-card {
+      background: #f8fafc;
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      margin: 16px 0;
+      font-size: 1.15rem;
+      color: #0969da;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-size: 0.96rem;
+      background-color: #ffffff;
+    }
+
+    table.custom-table th, 
+    table.custom-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+    }
+
+    table.custom-table th {
+      background-color: #f1f5f9;
+      color: var(--accent-navy-dark);
+      font-weight: 700;
+    }
+
+    table.custom-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    footer {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .slide-counter {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      background: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #eef2f6;
+      border-color: var(--border-strong);
+      color: #0969da;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #1f883d;
+      border-color: #1a7f37;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1a7f37;
+      color: #ffffff;
+    }
+
+    .slide::-webkit-scrollbar {
+      width: 8px;
+    }
+    .slide::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .slide::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .kbd {
+      background: #f1f5f9;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: #24292f;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Progresso Superior -->
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header>
+    <div class="header-title">
+      <span>Capacitação Estatística para Defesa de Tese</span>
+      <span class="header-badge">Encontro 1 de 4</span>
+    </div>
+    <div style="font-size: 0.88rem; color: var(--text-muted);">
+      Doutoranda: <strong style="color: #24292f;">Vanna Coelho Cabral</strong> | PPGEduCS / UNIVÁS
+    </div>
+  </header>
+
+  <!-- Viewport dos Slides -->
+  <main class="slider-viewport">
+
+    <!-- SLIDE 1: Capa & Apresentação da Jornada -->
+    <section class="slide active" data-slide="1">
+      <div style="text-align: center; margin-top: 10px; margin-bottom: 25px;">
+        <span class="header-badge" style="font-size: 0.85rem; padding: 4px 14px;">Mentoria Estratégica em Estatística e Psicometria</span>
+        <h1 style="margin-top: 15px; font-size: 2.2rem;">Fundamentos Metodológicos, Desenho do Estudo e Dimensionamento Amostral</h1>
+        <p style="color: var(--accent-navy); font-size: 1.15rem; font-weight: 600; text-align: center;">
+          Tese: "Qualidade de Vida e Autoeficácia na Formação Superior: Associações em Estudantes do Curso de Direito"
+        </p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Propósito deste Treinamento</h3>
+          <p>
+            Capacitar a doutoranda <strong>Vanna Cabral</strong> para dominar integralmente o arcabouço quantitativo de sua tese. O objetivo primordial não é transformá-la em uma técnica operadora de software (como o SPSS), mas <strong>empoderá-la conceitualmente</strong> para:
+          </p>
+          <ul>
+            <li>Explicar a lógica e os pressupostos teóricos de cada teste escolhido.</li>
+            <li>Defender o tamanho amostral de <strong>193 alunos</strong> com argumentos matemáticos formais e epistemológicos.</li>
+            <li>Sustentar os limites metodológicos e a legitimidade dos achados analíticos diante da banca examinadora.</li>
+            <li>Diferenciar associações estatísticas de nexos causais sem incorrer em falácias indutivas.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple); margin-top:0;">A Trilha de 4 Encontros (1 hora cada)</h3>
+          <ol style="margin-left: 18px; font-size: 0.96rem;">
+            <li><strong>Encontro 1 (Hoje):</strong> Delineamento, Amostragem por Conveniência, Dimensionamento Amostral, Poder Estatístico e Construtos Psicométricos.</li>
+            <li><strong>Encontro 2:</strong> Análise Exploratória, Estatística Descritiva, Medidas de Dispersão e Testes de Normalidade (Kolmogorov-Smirnov, Shapiro-Wilk, Assimetria e Curtose).</li>
+            <li><strong>Encontro 3:</strong> Distribuições Não Paramétricas e Análise de Correlação Bivariada (Coeficiente de Correlação de Spearman).</li>
+            <li><strong>Encontro 4:</strong> Modelagem Multivariada: Regressão Linear Múltipla, Coeficientes B e Beta, Coeficiente de Determinação ($R^2$ e $R^2$ Ajustado), Multicolinearidade e Diagnósticos de Resíduos.</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Diretriz Central para a Apresentação Oral</div>
+        <em>"Uma candidata ao título de doutora não precisa ter realizado manualmente cada cálculo matricial da regressão, mas precisa demonstrar clareza absoluta sobre as razões pelas quais cada procedimento foi adotado. A estatística constitui a linguagem formal que confere sustentação empírica aos resultados educacionais."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: O Problema de Pesquisa e o Objeto da Tese -->
+    <section class="slide" data-slide="2">
+      <h2>1. O Problema de Pesquisa e a Contextualização Institucional</h2>
+      <p>
+        Para compreender as decisões metodológicas e analíticas, é indispensável revisitar <strong>a questão central de investigação</strong> que determinou a coleta e o tratamento dos dados. A tese investiga uma população acadêmica submetida a exigências cognitivas e emocionais singulares: estudantes do curso de Direito.
+      </p>
+
+      <div class="card card-accent-gold" style="margin-bottom: 20px;">
+        <h3 style="color: var(--accent-gold); margin-top: 0;">A Pergunta Condutora da Tese</h3>
+        <p style="font-size: 1.08rem; color: #24292f; font-style: italic; line-height: 1.6;">
+          "Como se apresentam a qualidade de vida e a autoeficácia na formação superior dos estudantes do curso de Direito da Faculdade de Direito do Sul de Minas (FDSM) e em que medida os domínios da qualidade de vida se associam à autoeficácia na formação superior e às características sociodemográficas, acadêmicas e ocupacionais investigadas?"
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 style="color: var(--accent-cyan); margin-top:0;">O Contexto Institucional (FDSM)</h3>
+          <p style="font-size: 0.94rem;">
+            Instituição de ensino superior privada, monocêntrica, localizada em Pouso Alegre, Minas Gerais. Caracteriza-se por rigor técnico, cultura voltada para concursos públicos e o Exame de Ordem (OAB), impondo rotinas intensas de estudo e estágios.
+          </p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Construto 1: Autoeficácia</h3>
+          <p style="font-size: 0.94rem;">
+            Ancorado na Teoria Social Cognitiva de Albert Bandura: refere-se às crenças do estudante quanto à sua capacidade de organizar e executar as ações requeridas para atingir os objetivos formativos da graduação.
+          </p>
+        </div>
+        <div class="card">
+          <h3 style="color: var(--accent-green); margin-top:0;">Construto 2: Qualidade de Vida</h3>
+          <p style="font-size: 0.94rem;">
+            Operacionalizado conforme o referencial da Organização Mundial da Saúde (OMS): a percepção subjetiva do indivíduo sobre sua posição na vida, abarcando os domínios Físico, Psicológico, Relações Sociais e Meio Ambiente.
+          </p>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Distinção Conceitual Essencial perante a Banca</div>
+        A autoeficácia na formação superior <strong>não expressa desempenho objetivo, coeficiente de rendimento escolar ou capacidade cognitiva aferida por exames formais</strong>. Trata-se da avaliação subjetiva de autoconfiança para lidar com as demandas acadêmicas, atuando como mediador comportamental e potencial fator protetivo do bem-estar.
+      </div>
+    </section>
+
+    <!-- SLIDE 3: O Delineamento Metodológico Dessecado -->
+    <section class="slide" data-slide="3">
+      <h2>2. Anatomia do Delineamento da Pesquisa</h2>
+      <p>
+        No Capítulo 3 (Método, p. 26), a tese define o estudo a partir de quatro coordenadas epistemológicas clássicas: <br>
+        <em>"Trata-se de um estudo observacional, de abordagem quantitativa, com delineamento transversal e caráter analítico."</em>
+        A seguir, detalha-se o significado conceitual e a defesa técnica de cada coordenada:
+      </p>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Classificação Metodológica</th>
+            <th style="width: 35%;">Definição Teórica e Estatística</th>
+            <th style="width: 40%;">Argumentação para a Banca Examinadora</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Observacional</strong></td>
+            <td>Inexistência de manipulação ativa das variáveis explicativas pelo pesquisador; ausência de grupo experimental e grupo controle com intervenção dirigida.</td>
+            <td><em>"O delineamento observacional garantiu a avaliação ecológica dos fenômenos comportamentais e atitudinais no contexto real de formação jurídica, registrando a vivência discente sem introduzir perturbações artificiais."</em></td>
+          </tr>
+          <tr>
+            <td><strong>Quantitativa</strong></td>
+            <td>Sistematização de percepções subjetivas e traços latentes por meio de escalas intervalares validadas, gerando dados numéricos submetidos a modelagens estatísticas formais.</td>
+            <td><em>"A abordagem quantitativa permitiu padronizar as mensurações, analisar o grau de dispersão das respostas e quantificar a magnitude das relações entre os construtos por meio de testes inferenciais."</em></td>
+          </tr>
+          <tr>
+            <td><strong>Transversal (Cross-sectional)</strong></td>
+            <td>Coleta simultânea das variáveis explicativas e de desfecho em uma única janela temporal (ano letivo de 2025), funcionando como um corte instantâneo da realidade.</td>
+            <td><em>"Admite-se expressamente que o corte transversal impede estabelecer sucessão temporal ou causalidade estrita. As inferências restringem-se à identificação de covariâncias e inter-relações simultâneas."</em></td>
+          </tr>
+          <tr>
+            <td><strong>Analítico</strong></td>
+            <td>Transcendência da estatística puramente descritiva (tabelas de frequência); formulação e teste formal de hipóteses de associação e regressão multivariada com controle estatístico.</td>
+            <td><em>"O estudo não se limitou a delinear o perfil demográfico da amostra; examinou modelos matemáticos preditivos controlados por variáveis sociodemográficas, acadêmicas e ocupacionais."</em></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Alerta para Questionamentos sobre Causalidade</div>
+        Caso a banca questione se uma autoeficácia elevada constitui a causa direta de uma qualidade de vida psicológica favorável: <br>
+        <strong>Resposta técnica recomendada:</strong> <em>"Por se tratar de delineamento transversal, o estudo afere associações estatísticas independentes e não relações causais diretas. As evidências indicam variação concomitante entre as crenças de capacidade e os escores dos domínios, passível de influência mútua."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: População, Amostra e Amostragem de Conveniência -->
+    <section class="slide" data-slide="4">
+      <h2>3. População versus Amostra: A Estratégia de Coleta</h2>
+      <p>
+        O dimensionamento do grupo investigado e a forma de recrutamento constituem pontos frequentes de arguição em bancas de pós-graduação.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top: 0;">Composição da Amostra Efetiva ($n = 193$)</h3>
+          <ul>
+            <li><strong>População-alvo:</strong> Estudantes regularmente matriculados no curso de Direito da FDSM em 2025.</li>
+            <li><strong>Abrangência curricular:</strong> Do 1º ao 5º semestre letivo (25,9% no 1º semestre; 18,1% no 2º; 22,3% no 3º; 8,8% no 4º; 24,9% no 5º).</li>
+            <li><strong>Características dominantes:</strong> Mulheres (64,2%), faixa etária jovem (média de 24,04 anos; desvio-padrão de 8,42 anos; variação de 18 a 69 anos), solteiros (83,9%), sem filhos (82,9%), financeiramente dependentes (67,4%) e estagiários da área jurídica (51,3%).</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top: 0;">Amostragem Não Probabilística por Conveniência</h3>
+          <p style="font-size: 0.96rem;">
+            O convite e a apresentação dos objetivos da pesquisa foram conduzidos presencialmente pela pesquisadora nas salas de aula, disponibilizando-se formulário eletrônico via Google Forms.
+          </p>
+          <p style="font-size: 0.96rem;">
+            <strong>Fundamentação da técnica:</strong> A composição amostral dependeu da presença dos alunos no momento da apresentação e do consentimento livre e voluntário. Não houve sorteio aleatório a partir de listagens acadêmicas, caracterizando tipologia não probabilística.
+          </p>
+        </div>
+      </div>
+
+      <div class="card card-accent-purple" style="margin-top: 15px;">
+        <h3 style="color: var(--accent-purple); margin-top:0;">Contextualização da Ausência do Tamanho Populacional Formal</h3>
+        <p>
+          A coordenação da instituição de ensino não forneceu o quantitativo exato de alunos ativos matriculados durante o período de coleta dos dados.
+        </p>
+        <p>
+          <strong>Justificativa metodológica estruturada:</strong><br>
+          <em>"Diante da ausência do fornecimento formal do universo total institucional pela faculdade, adotou-se o modelo analítico para populações indeterminadas ou infinitas. Isso assegurou que o dimensionamento amostral e os parâmetros de erro fossem estabelecidos sobre os cenários mais conservadores da teoria estatística."</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: O Cálculo Amostral Passo a Passo (A Prova Matemática) -->
+    <section class="slide" data-slide="5">
+      <h2>4. O Cálculo Amostral Formal: Equações e Interpretação</h2>
+      <p>
+        Para demonstrar a suficiência do número final de participantes perante a banca, apresenta-se a dedução matemática clássica do tamanho amostral para estimação de proporções e parâmetros contínuos.
+      </p>
+
+      <div class="card">
+        <h3 style="color: var(--accent-navy); margin-top:0;">Fórmula de Cochran para Populações Indeterminadas</h3>
+        <p>Em investigações em que o tamanho exato da população ($N$) não está formalmente fixado, emprega-se a expressão clássica de amostragem:</p>
+        
+        <div class="formula-card">
+          $$n = \frac{Z^2 \cdot p \cdot (1 - p)}{e^2}$$
+        </div>
+
+        <div class="grid-3" style="font-size: 0.92rem; margin-top: 10px;">
+          <div>
+            <strong>$Z = 1{,}96$</strong><br>
+            Escore crítico da distribuição normal padrão associado a um nível de confiança bilateral de 95% ($\alpha = 0{,}05$).
+          </div>
+          <div>
+            <strong>$p = 0{,}50$ e $(1-p) = 0{,}50$</strong><br>
+            Variância populacional máxima ($p \cdot q = 0{,}25$), assumida de modo conservador na ausência de parâmetros prévios conhecidos.
+          </div>
+          <div>
+            <strong>$e$ = Margem de Erro Amostral</strong><br>
+            Semi-intervalo de tolerância admissível para a divergência entre a estimativa amostral e o parâmetro populacional.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 15px;">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Cenário Teórico com Margem de Erro Padrão ($e = 5\%$)</h3>
+          $$n = \frac{(1{,}96)^2 \cdot 0{,}50 \cdot 0{,}50}{(0{,}05)^2} = \frac{3{,}8416 \cdot 0{,}25}{0{,}0025} = 384{,}16 \approx 385$$
+          <p style="font-size: 0.94rem; margin-top: 8px;">
+            Este dimensionamento ideal de 385 sujeitos aplica-se a estudos de abrangência populacional irrestrita. Em faculdades isoladas do interior, o total de discentes matriculados com frequência ativa muitas vezes aproxima-se dessa magnitude, tornando esse número impraticável em adesão voluntária presencial.
+          </p>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">Cenário Real Efetivado na Tese ($n = 193$)</h3>
+          <p style="font-size: 0.94rem;">Calculando a margem de erro máxima associada à amostra obtida:</p>
+          $$e = \sqrt{\frac{Z^2 \cdot p \cdot (1 - p)}{n}} = \sqrt{\frac{3{,}8416 \cdot 0{,}25}{193}} = \sqrt{\frac{0{,}9604}{193}} \approx \sqrt{0{,}004976} \approx 0{,}07054 \approx 7{,}05\%$$
+          <p style="font-size: 0.94rem; margin-top: 8px;">
+            <strong>Síntese para a banca examinadora:</strong> O grupo de 193 participantes assegura um nível de confiança de 95% com margem de erro máxima de <strong>7,05%</strong>, patamar plenamente aceito nas pesquisas em ciências humanas e sociais aplicadas (cujo intervalo padrão situa-se entre 5% e 8%).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: O Poder Estatístico a Posteriori (G*Power) -->
+    <section class="slide" data-slide="6">
+      <h2>5. Avaliação do Poder Estatístico a Posteriori (Post-Hoc)</h2>
+      <p>
+        Em análises inferenciais com modelos de regressão linear contendo de 14 a 18 preditores simultâneos, a banca costuma demandar o valor do <strong>Poder do Teste ($1 - \beta$)</strong>.
+      </p>
+
+      <div class="card card-accent-blue">
+        <h3 style="color: var(--accent-navy); margin-top:0;">Conceito de Poder Estatístico</h3>
+        <p style="font-size: 0.98rem;">
+          O poder estatístico expressa a probabilidade de rejeitar corretamente a hipótese nula quando ela é falsa; em outros termos, é a capacidade de detectar um efeito real existente na população, evitando o <strong>Erro Tipo II ($\beta$, falso negativo)</strong>. A convenção metodológica estabelece como adequado um poder mínimo de <strong>0,80 (80%)</strong>.
+        </p>
+      </div>
+
+      <div class="grid-2" style="margin-top: 15px;">
+        <div class="card">
+          <h3 style="color: var(--accent-cyan); margin-top:0;">1. Para as Correlações de Spearman</h3>
+          <p style="font-size: 0.94rem;">
+            As correlações bivariadas significativas registradas na tese oscilaram entre $r_s = 0{,}206$ e $r_s = 0{,}377$, indicando magnitudes de efeito de pequenas a moderadas.
+          </p>
+          <div class="formula-card" style="font-size: 1rem;">
+            Considerando $N = 193$, $\alpha = 0{,}05$ (bilateral) e efeito moderado ($r = 0{,}25$):<br>
+            <span style="color: var(--accent-green); font-weight: 700; font-size: 1.2rem;">Poder Estatístico ($1 - \beta$) > 93%</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Conclusão: Probabilidade de ocorrência de falso negativo inferior a 7% nas matrizes correlacionais.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="color: var(--accent-purple); margin-top:0;">2. Para a Regressão Linear Múltipla</h3>
+          <p style="font-size: 0.94rem;">
+            O modelo mais amplo reuniu <strong>18 preditores simultâneos</strong> (Tabela 7), alcançando coeficientes de determinação $R^2$ entre 0,249 e 0,346, o que corresponde a um tamanho de efeito $f^2$ entre 0,33 e 0,53 (efeito médio a elevado).
+          </p>
+          <div class="formula-card" style="font-size: 1rem;">
+            Considerando $N = 193$, 18 preditores e $f^2 = 0{,}35$ com $\alpha = 0{,}05$:<br>
+            <span style="color: var(--accent-green); font-weight: 700; font-size: 1.2rem;">Poder Estatístico ($1 - \beta$) > 99%</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Mesmo na eventualidade de efeitos populacionais de pequena intensidade ($f^2 = 0{,}10$), o poder amostral mantem-se acima de 85%.
+          </p>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Posicionamento de Defesa da Doutoranda</div>
+        <em>"Embora o plano de amostragem tenha sido de conveniência em virtude da indisponibilidade do cadastro total de discentes, os testes de poder estatístico a posteriori confirmam que a base de 193 casos possui suficiência para sustentar modelos de regressão multivariada com até 18 variáveis independentes sem incorrer em fragilidade inferencial por subdimensionamento amostral."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Construto 1 - Escala de Autoeficácia na Formação Superior -->
+    <section class="slide" data-slide="7">
+      <h2>6. Operacionalização do Construto: Autoeficácia na Formação Superior</h2>
+      <p>
+        O primeiro construto nuclear da pesquisa foi avaliado por meio da Escala de Autoeficácia na Formação Superior, construída e validada psicometricamente por <strong>Polydoro e Guerreiro-Casanova (2010)</strong>.
+      </p>
+
+      <div class="grid-2">
+        <div>
+          <div class="card card-accent-blue" style="margin-bottom: 15px;">
+            <h3 style="color: var(--accent-navy); margin-top:0;">Propriedades Estruturais da Escala</h3>
+            <ul>
+              <li><strong>Composição total:</strong> 34 itens dispostos em escala do tipo Likert de 1 a 10 pontos ($1 = \text{pouco capaz}$; $10 = \text{muito capaz}$).</li>
+              <li><strong>Escore Global (TotalAE):</strong> Média de todos os 34 itens respondidos pelo estudante.</li>
+              <li><strong>Média observada na tese:</strong> Média global de <strong>7,22</strong> (Desvio-Padrão = 1,05; amplitude observada de 3,88 a 8,79).</li>
+              <li><strong>Ausência de pontos de corte clínicos:</strong> A escala não opera com divisões arbitrárias de categorização clínica; a variável foi preservada em sua escala quantitativa contínua.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="color: var(--accent-navy); margin-top:0;">As Cinco Dimensões Componentes</h3>
+          <table class="custom-table" style="font-size: 0.92rem;">
+            <thead>
+              <tr>
+                <th>Sigla</th>
+                <th>Dimensão</th>
+                <th>Número de Itens</th>
+                <th>Média (DP) na Tese</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>AGA</strong></td>
+                <td>Autoeficácia na Gestão Acadêmica</td>
+                <td>4 itens (18, 21, 26, 27)</td>
+                <td><strong>7,45</strong> (1,16) - Maior média</td>
+              </tr>
+              <tr>
+                <td><strong>AA</strong></td>
+                <td>Autoeficácia Acadêmica</td>
+                <td>9 itens (1, 2, 3, 4, 11, 12, 14, 24, 32)</td>
+                <td><strong>7,37</strong> (1,08)</td>
+              </tr>
+              <tr>
+                <td><strong>ARF</strong></td>
+                <td>Autoeficácia na Regulação da Formação</td>
+                <td>7 itens (8, 9, 10, 16, 19, 22, 31)</td>
+                <td><strong>7,26</strong> (1,25)</td>
+              </tr>
+              <tr>
+                <td><strong>AIS</strong></td>
+                <td>Autoeficácia na Interação Social</td>
+                <td>7 itens (5, 6, 13, 17, 23, 28, 29)</td>
+                <td><strong>7,17</strong> (1,17)</td>
+              </tr>
+              <tr>
+                <td><strong>AAP</strong></td>
+                <td>Autoeficácia em Ações Proativas</td>
+                <td>7 itens (7, 15, 20, 25, 30, 33, 34)</td>
+                <td><strong>6,87</strong> (1,49) - Menor média</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Significado da Disparidade entre AGA e AAP</div>
+        A <strong>Gestão Acadêmica (AGA = 7,45)</strong> obteve o maior escore médio, indicando autoconfiança consolidada para cumprir prazos formais e tarefas rotineiras do curso. Em contrapartida, as <strong>Ações Proativas (AAP = 6,87; DP = 1,49)</strong> apresentaram o menor escore e a maior variabilidade, refletindo hesitação discente quanto à busca autônoma de projetos de extensão, produção científica e iniciativas que transcendem a grade obrigatória.
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Construto 2 - WHOQOL-bref (Qualidade de Vida) -->
+    <section class="slide" data-slide="8">
+      <h2>7. Operacionalização do Construto: WHOQOL-bref (OMS)</h2>
+      <p>
+        A avaliação da qualidade de vida foi conduzida por meio da versão abreviada em língua portuguesa do <em>World Health Organization Quality of Life</em> (WHOQOL-bref), traduzida e validada por <strong>Fleck et al. (2000)</strong>.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Estrutura Metrológica do Instrumento</h3>
+          <ul>
+            <li><strong>Total de itens:</strong> 26 questões avaliadas em escala Likert de 5 pontos ($1$ a $5$).</li>
+            <li><strong>Facetas gerais independentes:</strong> Questão 1 (percepção global da qualidade de vida) e Questão 2 (satisfação geral com a saúde).</li>
+            <li><strong>Facetas específicas:</strong> 24 questões alocadas em quatro domínios consolidados.</li>
+            <li><strong>Procedimento de cálculo:</strong> Recodificação e inversão dos itens formulados em sentido negativo (ex.: Q26 sobre sentimentos negativos) seguida de conversão linear para a escala normalizada de <strong>0 a 100 pontos</strong>, na qual valores maiores representam melhor percepção de qualidade de vida.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Resultados Descritivos na Tese (Tabela 4)</h3>
+          <ul style="list-style-type: none; margin-left: 0;">
+            <li style="margin-bottom: 12px;">
+              <strong>1º Lugar - Domínio Meio Ambiente:</strong> <span style="font-weight:700;">69,45</span> (DP = 16,91; Mín = 18,75; Máx = 100,00)<br>
+              <small style="color: var(--text-muted);">Segurança, estabilidade financeira, condições de moradia, transporte, acesso a serviços e lazer.</small>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>2º Lugar - Domínio Relações Sociais:</strong> <span style="font-weight:700;">67,49</span> (DP = 20,30; Mín = 8,33; Máx = 100,00)<br>
+              <small style="color: var(--text-muted);">Relações pessoais, rede de apoio de amizades e atividade sexual (maior dispersão amostral).</small>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>3º Lugar - Domínio Físico:</strong> <span style="font-weight:700;">66,71</span> (DP = 15,63; Mín = 17,86; Máx = 100,00)<br>
+              <small style="color: var(--text-muted);">Disponibilidade de energia, fadiga, dor física, qualidade do sono e capacidade para o trabalho.</small>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <strong>4º Lugar - Domínio Psicológico:</strong> <span style="font-weight:700;">63,04</span> (DP = 16,95; Mín = 16,67; Máx = 100,00)<br>
+              <small style="color: var(--text-muted);">Sentimentos positivos, autoestima, imagem corporal, concentração, memória e enfrentamento de afetos negativos.</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Aspecto Crítico para a Discussão dos Resultados</div>
+        O <strong>domínio psicológico</strong> registrou a menor média entre os quatro domínios avaliados (63,04), revelando maior fragilidade nessa esfera da experiência acadêmica. Por sua vez, o <strong>domínio de relações sociais</strong> exibiu a maior dispersão (DP = 20,30), evidenciando que a percepção do suporte interpessoal não foi homogênea entre os alunos.
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Covariáveis e Variáveis de Controle -->
+    <section class="slide" data-slide="9">
+      <h2>8. Mapeamento das Covariáveis e Variáveis de Ajuste</h2>
+      <p>
+        Para verificar se a relação entre Autoeficácia e Qualidade de Vida mantinha-se estável independentemente de fatores intervenientes, foram investigadas 14 características sociodemográficas, acadêmicas e ocupacionais.
+      </p>
+
+      <div class="grid-3">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Sociodemográficas</h3>
+          <ul style="font-size: 0.92rem;">
+            <li><strong>Idade:</strong> Média de 24,04 anos (amplitude de 18 a 69).</li>
+            <li><strong>Sexo:</strong> 64,2% feminino e 35,8% masculino.</li>
+            <li><strong>Cor/Raça:</strong> 71,0% branca; 21,8% parda; 7,3% preta.</li>
+            <li><strong>Estado Civil:</strong> 83,9% solteiros; 16,1% casados/união consensual.</li>
+            <li><strong>Presença de Filhos:</strong> 82,9% não possuem; 17,1% possuem.</li>
+            <li><strong>Renda Familiar:</strong> 58,0% acima de 5 salários mínimos; 32,6% de 2 a 5; 9,3% até 2.</li>
+            <li><strong>Escolaridade Parental:</strong> Aferida para mãe e pai.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple); margin-top:0;">Acadêmicas</h3>
+          <ul style="font-size: 0.92rem;">
+            <li><strong>Semestre do Curso:</strong> 1º ao 5º semestre (ausência de turmas dos períodos finais 6º ao 10º).</li>
+            <li><strong>Primeira Graduação:</strong> 88,1% sim; 11,9% já possuíam curso superior prévio.</li>
+            <li><strong>Rede do Ensino Médio:</strong> 54,9% pública; 45,1% privada.</li>
+            <li><strong>Tempo de Deslocamento:</strong> 63,0% até 30 minutos; 17,7% de 31 a 45 min; 10,4% de 46 a 60 min; 8,9% acima de 60 min.</li>
+            <li><strong>Turno:</strong> <em>Removido automaticamente da modelagem pelo software.</em></li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">Ocupacionais</h3>
+          <ul style="font-size: 0.92rem;">
+            <li><strong>Carga Horária Laboral:</strong> 65,3% sem trabalho ou carga reduzida; 26,4% moderada; 8,3% elevada.</li>
+            <li><strong>Dependência Financeira:</strong> 67,4% dependentes de familiares; 32,6% com independência financeira.</li>
+            <li><strong>Estágio na Área Jurídica:</strong> 51,3% realizam estágio; 48,7% não realizam.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="banca-alert">
+        <div class="banca-alert-title">Observação Metodológica sobre Codificação Categórica</div>
+        Nas saídas estatísticas geradas pelo software IBM SPSS para as Tabelas 6 e 7, as variáveis categóricas (Sexo, Estado Civil, Presença de Filhos e Renda) foram inseridas sem discriminação explícita da categoria tomada como referência básica (dummy de contraste). <br>
+        <strong>Conduta analítica adotada na tese:</strong> Reconheceu-se a presença de significância estatística ($p < 0{,}05$), abstendo-se, porém, de fixar conclusões polares definitivas sem a checagem da matriz de parametrização primária. Essa cautela expressa fidelidade aos dados disponíveis.
+      </div>
+    </section>
+
+    <!-- SLIDE 10: O Simulador de Sabatina da Banca (Perguntas & Respostas) -->
+    <section class="slide" data-slide="10">
+      <h2>9. Simulação de Arguição perante a Banca Examinadora</h2>
+      <p>
+        O preparo para o exame de qualificação ou defesa final requer o domínio das justificativas para as principais indagações metodológicas:
+      </p>
+
+      <div class="qa-box">
+        <div class="qa-question">Pergunta 1 da Banca: "Por que o dimensionamento amostral não foi estabelecido antes do início da coleta de dados?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Doutoranda:</strong> <em>"No planejamento metodológico inicial, solicitou-se o número exato de discentes ativos para a elaboração de uma amostragem estratificada. Todavia, a instituição não disponibilizou o registro cadastral global do curso. Em decorrência dessa restrição operacional, utilizou-se o modelo para populações infinitas/não delimitadas e realizou-se a auditoria do poder estatístico a posteriori via G*Power, constatando-se que a amostra de 193 participantes atinge poder estatístico superior a 90% para as análises de regressão linear múltipla propostas."</em>
+        </div>
+      </div>
+
+      <div class="qa-box">
+        <div class="qa-question">Pergunta 2 da Banca: "Os resultados obtidos com esses 193 estudantes podem ser generalizados para o contexto nacional da graduação em Direito?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Doutoranda:</strong> <em>"Não, e essa limitação foi expressamente ressaltada na Seção 5.6 da tese. A pesquisa baseou-se em amostragem por conveniência em uma faculdade privada do interior de Minas Gerais, composta majoritariamente por discentes dos períodos iniciais e intermediários. As conclusões possuem validade interna assegurada para o grupo estudado, mas sua generalização requer parcimônia e replicação em outros contextos institucionais."</em>
+        </div>
+      </div>
+
+      <div class="qa-box">
+        <div class="qa-question">Pergunta 3 da Banca: "Qual foi a razão técnica para a exclusão da variável 'Turno' dos modelos de regressão?"</div>
+        <div class="qa-answer">
+          <strong>Resposta da Doutoranda:</strong> <em>"O algoritmo de entrada simultânea do IBM SPSS Statistics excluiu a variável 'Turno' de modo automático em virtude de variabilidade nula ou colinearidade estrita no subgrupo de respondentes que completaram integralmente todas as variáveis sociodemográficas e psicométricas analisadas. A manutenção de um preditor sem variância provocaria singularidade na matriz de covariâncias."</em>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Síntese e Preparação para o Encontro 2 -->
+    <section class="slide" data-slide="11">
+      <h2>10. Síntese do Encontro 1 e Temas do Encontro 2</h2>
+      <p>
+        Com este primeiro módulo, estruturou-se a base conceitual e empírica da tese:
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Síntese dos Fundamentos Consolidados</h3>
+          <ul>
+            <li><strong>Delineamento Metodológico:</strong> Observacional, quantitativo, transversal e analítico.</li>
+            <li><strong>Estrutura Amostral:</strong> Amostra por conveniência ($n = 193$), margem de erro amostral máxima de 7,05% a 95% de confiança.</li>
+            <li><strong>Poder do Teste:</strong> Poder a posteriori superior a 90% para os modelos de regressão executados com até 18 covariáveis.</li>
+            <li><strong>Autoeficácia Discente:</strong> Escala validada de Polydoro (34 itens; Gestão Acadêmica como maior escore; Ações Proativas como menor escore).</li>
+            <li><strong>Qualidade de Vida:</strong> Instrumento WHOQOL-bref (26 itens; Meio Ambiente como maior escore; Psicológico como menor escore).</li>
+            <li><strong>Postura Epistemológica:</strong> Foco em associações estatísticas e covariâncias, rejeitando inferências de causalidade unidirecional.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Conteúdo Programado para o Encontro 2</h3>
+          <p style="font-size: 0.96rem;">
+            No próximo módulo, será detalhado o <strong>Capítulo 4.2 da tese (Distribuição das Variáveis)</strong>:
+          </p>
+          <ul style="font-size: 0.94rem;">
+            <li>Pressupostos da distribuição normal e a justificativa para a aplicação dos testes de <strong>Kolmogorov-Smirnov</strong> e <strong>Shapiro-Wilk</strong>.</li>
+            <li>Interpretação dos índices de <strong>Assimetria (Skewness)</strong> negativa e <strong>Curtose (Kurtosis)</strong> leptocúrtica nas dimensões de autoeficácia.</li>
+            <li>A razão metodológica que determinou o emprego da <strong>Correlação de Spearman</strong> em substituição ao Coeficiente de Pearson.</li>
+            <li>Análise comparativa entre média aritmética e mediana em dados com afastamento da normalidade estatística.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="banca-alert" style="text-align: center; margin-top: 25px;">
+        <div class="banca-alert-title" style="justify-content: center;">Atividade Orientada para a Doutoranda</div>
+        <em>"Revisar o Capítulo 3 (Método, páginas 26 a 32) da tese acompanhando os tópicos deste material. Essa leitura integrada consolida o domínio conceitual sobre os parâmetros e as opções metodológicas adotadas no estudo."</em>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé e Navegação -->
+  <footer>
+    <div class="slide-counter" id="slideCounter">Slide 1 de 11</div>
+    <div style="display: flex; gap: 8px; align-items: center; color: var(--text-muted); font-size: 0.88rem;">
+      <span class="kbd">←</span> <span class="kbd">→</span> Navegação pelo teclado | <span class="kbd">Espaço</span> Avançar
+    </div>
+    <div class="nav-controls">
+      <button class="btn" id="prevBtn" disabled>
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+        Anterior
+      </button>
+      <button class="btn btn-primary" id="nextBtn">
+        Próximo
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Script de Controle dos Slides -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentSlide = 1;
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressBar = document.getElementById('progressBar');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 1 || newIndex > totalSlides) return;
+
+        slides.forEach(slide => {
+          slide.classList.remove('active');
+        });
+
+        currentSlide = newIndex;
+        const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+        if (activeSlide) {
+          activeSlide.classList.add('active');
+          activeSlide.scrollTop = 0;
+        }
+
+        prevBtn.disabled = (currentSlide === 1);
+        nextBtn.disabled = (currentSlide === totalSlides);
+
+        slideCounter.textContent = `Slide ${currentSlide} de ${totalSlides}`;
+
+        const progressPct = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+        progressBar.style.width = `${progressPct}%`;
+
+        // Reprocessamento das fórmulas matemáticas no slide ativo
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([activeSlide]);
+        }
+      }
+
+      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+      nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Spacebar' || e.key === ' ') {
+          e.preventDefault();
+          updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(1);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides);
+        }
+      });
+
+      updateSlide(1);
+    });
+  </script>
+</body>
+</html>

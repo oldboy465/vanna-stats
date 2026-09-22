@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentoria Estatística | Tese Vanna Cabral</title>
+  <style>
+    :root {
+      --bg-primary: #f4f6f9;
+      --bg-card: #ffffff;
+      --border-subtle: #d0d7de;
+      --text-main: #1f2328;
+      --text-muted: #57606a;
+      --accent-navy: #0969da;
+      --accent-navy-hover: #054da7;
+      --shadow-card: 0 4px 14px rgba(140, 149, 159, 0.15);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 780px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #ddf4ff;
+      color: var(--accent-navy);
+      border: 1px solid #54aeff;
+      padding: 4px 14px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    p.subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    @media (min-width: 600px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-navy);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      color: var(--accent-navy);
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-block;
+      text-align: center;
+      text-decoration: none;
+      background: var(--accent-navy);
+      color: #ffffff;
+      font-weight: 600;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: background 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--accent-navy-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Mentoria em Estatística</span>
+      <h1>Capacitação para Defesa de Tese</h1>
+      <p class="subtitle">Doutoranda: Vanna Coelho Cabral | PPGEduCS / UNIVÁS</p>
+    </header>
+
+    <div class="grid">
+      <div class="card">
+        <div>
+          <h2>Encontro 1</h2>
+          <p>Metodologia, Delineamento Observacional, Amostragem por Conveniência e Dimensionamento Amostral.</p>
+        </div>
+        <a href="1.html" class="btn">Acessar Apresentação →</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <h2>Encontro 2</h2>
+          <p>Análise Exploratória, Estatística Descritiva e Testes de Aderência à Normalidade (KS, SW, Assimetria e Curtose).</p>
+        </div>
+        <a href="2.html" class="btn">Acessar Apresentação →</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

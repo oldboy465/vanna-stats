@@ -32,7 +32,7 @@
     }
 
     .container {
-      max-width: 780px;
+      max-width: 960px;
       width: 100%;
     }
 
@@ -72,7 +72,11 @@
     }
 
     @media (min-width: 600px) {
-      .grid { grid-template-columns: 1fr 1fr; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: repeat(3, 1fr); }
     }
 
     .card {
@@ -146,6 +150,14 @@
           <p>Análise Exploratória, Estatística Descritiva e Testes de Aderência à Normalidade (KS, SW, Assimetria e Curtose).</p>
         </div>
         <a href="2.html" class="btn">Acessar Apresentação →</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <h2>Encontro 3</h2>
+          <p>Métricas Descritivas, Composição Fatorial e Análise de Correlação Bivariada de Spearman.</p>
+        </div>
+        <a href="3.html" class="btn">Acessar Apresentação →</a>
       </div>
     </div>
   </div>

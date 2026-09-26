@@ -4,71 +4,94 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mentoria Estatística | Tese Vanna Cabral</title>
+  
   <style>
     :root {
-      --bg-primary: #f4f6f9;
+      --bg-page: #f8fafc;
       --bg-card: #ffffff;
-      --border-subtle: #d0d7de;
-      --border-strong: #afb8c1;
-      --text-main: #1f2328;
-      --text-muted: #57606a;
-      --accent-navy: #0969da;
-      --accent-navy-hover: #054da7;
-      --shadow-card: 0 4px 14px rgba(140, 149, 159, 0.15);
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --border-subtle: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      
+      --color-m1: #0969da;
+      --color-m1-bg: #eff6ff;
+      --color-m2: #7c3aed;
+      --color-m2-bg: #f5f3ff;
+      --color-m3: #0d9488;
+      --color-m3-bg: #f0fdfa;
+      --color-m4: #ea580c;
+      --color-m4-bg: #fff7ed;
+
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
-      background-color: var(--bg-primary);
+      background-color: var(--bg-page);
       color: var(--text-main);
-      font-family: var(--font-family);
+      font-family: var(--font-stack);
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      padding: 32px 20px;
+      align-items: center;
+      padding: 40px 20px;
     }
 
     .container {
-      max-width: 960px;
+      max-width: 980px;
       width: 100%;
     }
 
+    /* Cabeçalho */
     header {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
-    .badge {
-      display: inline-block;
-      background: #ddf4ff;
-      color: var(--accent-navy);
-      border: 1px solid #54aeff;
+    .header-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #eff6ff;
+      color: #0969da;
+      border: 1px solid #bfdbfe;
       padding: 4px 14px;
-      border-radius: 12px;
-      font-size: 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.78rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      letter-spacing: 0.6px;
+      margin-bottom: 14px;
     }
 
     h1 {
-      font-size: 2rem;
+      font-size: 2.1rem;
       font-weight: 800;
+      color: var(--text-main);
+      letter-spacing: -0.5px;
       margin-bottom: 8px;
-      color: #1f2328;
-      line-height: 1.25;
     }
 
-    p.subtitle {
+    .subtitle {
+      font-size: 1rem;
       color: var(--text-muted);
-      font-size: 1.02rem;
     }
 
+    .subtitle strong {
+      color: #334155;
+    }
+
+    /* Grade de Cards */
     .grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -76,147 +99,241 @@
     }
 
     @media (min-width: 680px) {
-      .grid { 
-        grid-template-columns: 1fr 1fr; 
+      .grid {
+        grid-template-columns: 1fr 1fr;
       }
     }
 
+    /* Card Estruturado */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 24px 26px;
-      box-shadow: var(--shadow-card);
+      border-radius: 14px;
+      padding: 26px;
+      box-shadow: var(--shadow-sm);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit;
       position: relative;
+      overflow: hidden;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #cbd5e1;
+      transition: height 0.2s ease;
     }
 
     .card:hover {
       transform: translateY(-4px);
-      border-color: var(--accent-navy);
-      box-shadow: 0 8px 24px rgba(9, 105, 218, 0.12);
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-hover);
     }
 
-    .card-header {
+    /* Temas de cores por módulo */
+    .card-m1::before { background: var(--color-m1); }
+    .card-m1 .module-tag { background: var(--color-m1-bg); color: var(--color-m1); border-color: #bfdbfe; }
+    .card-m1:hover .action-link { color: var(--color-m1); }
+
+    .card-m2::before { background: var(--color-m2); }
+    .card-m2 .module-tag { background: var(--color-m2-bg); color: var(--color-m2); border-color: #ddd6fe; }
+    .card-m2:hover .action-link { color: var(--color-m2); }
+
+    .card-m3::before { background: var(--color-m3); }
+    .card-m3 .module-tag { background: var(--color-m3-bg); color: var(--color-m3); border-color: #99f6e4; }
+    .card-m3:hover .action-link { color: var(--color-m3); }
+
+    .card-m4::before { background: var(--color-m4); }
+    .card-m4 .module-tag { background: var(--color-m4-bg); color: var(--color-m4); border-color: #fed7aa; }
+    .card-m4:hover .action-link { color: var(--color-m4); }
+
+    .card-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .card-tag {
-      font-size: 0.75rem;
+    .module-tag {
+      font-size: 0.74rem;
       font-weight: 700;
       text-transform: uppercase;
-      padding: 2px 8px;
+      letter-spacing: 0.5px;
+      padding: 3px 10px;
       border-radius: 6px;
-      background: #f6f8fa;
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
+      border: 1px solid transparent;
     }
 
-    .card h2 {
-      font-size: 1.28rem;
-      color: var(--accent-navy);
+    .slide-count {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .card-content h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-main);
       margin-bottom: 8px;
     }
 
-    .card p {
-      font-size: 0.93rem;
+    .card-content p {
+      font-size: 0.94rem;
       color: var(--text-muted);
-      margin-bottom: 22px;
       line-height: 1.55;
+      margin-bottom: 24px;
     }
 
-    .btn {
-      display: inline-block;
+    /* Rodapé do Card */
+    .card-footer {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .action-link {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #334155;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease, gap 0.2s ease;
+    }
+
+    .card:hover .action-link {
+      gap: 10px;
+    }
+
+    .action-link svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover .action-link svg {
+      transform: translateX(3px);
+    }
+
+    footer.page-footer {
+      margin-top: 40px;
       text-align: center;
-      text-decoration: none;
-      background: var(--accent-navy);
-      color: #ffffff;
-      font-weight: 600;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      transition: background 0.2s ease;
-    }
-
-    .btn:hover {
-      background: var(--accent-navy-hover);
-    }
-
-    footer {
-      text-align: center;
-      margin-top: 36px;
       font-size: 0.85rem;
-      color: var(--text-muted);
+      color: #94a3b8;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
     <header>
-      <span class="badge">Mentoria em Estatística</span>
-      <h1>Capacitação para Defesa de Tese</h1>
-      <p class="subtitle">Doutoranda: Vanna Coelho Cabral | PPGEduCS / UNIVÁS</p>
+      <div class="header-badge">
+        <span>Capacitação Metodológica & Estatística</span>
+      </div>
+      <h1>Mentoria para Defesa de Tese</h1>
+      <p class="subtitle">
+        Doutoranda: <strong>Vanna Coelho Cabral</strong> &bull; PPGEduCS / UNIVÁS
+      </p>
     </header>
 
-    <div class="grid">
-      <!-- Encontro 1 -->
-      <div class="card">
-        <div>
-          <div class="card-header">
-            <span class="card-tag">Módulo 1</span>
+    <main class="grid">
+
+      <!-- Módulo 1 -->
+      <a href="1.html" class="card card-m1">
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="module-tag">Módulo 1</span>
+            <span class="slide-count">11 Slides</span>
           </div>
           <h2>Encontro 1</h2>
-          <p>Metodologia, Delineamento Observacional, Amostragem por Conveniência e Dimensionamento Amostral ($N = 193$).</p>
+          <p>
+            Delineamento observacional transversal, amostragem por conveniência, cálculo amostral para populações não delimitadas (n = 193) e análise de poder estatístico a posteriori via G*Power.
+          </p>
         </div>
-        <a href="1.html" class="btn">Acessar Apresentação →</a>
-      </div>
+        <div class="card-footer">
+          <span class="action-link">
+            Acessar Apresentação
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </div>
+      </a>
 
-      <!-- Encontro 2 -->
-      <div class="card">
-        <div>
-          <div class="card-header">
-            <span class="card-tag">Módulo 2</span>
+      <!-- Módulo 2 -->
+      <a href="2.html" class="card card-m2">
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="module-tag">Módulo 2</span>
+            <span class="slide-count">11 Slides</span>
           </div>
           <h2>Encontro 2</h2>
-          <p>Análise Exploratória, Estatística Descritiva e Testes de Aderência à Normalidade (KS, SW, Assimetria e Curtose).</p>
+          <p>
+            Estatística descritiva, dispersão, testes de normalidade (Kolmogorov-Smirnov e Shapiro-Wilk), assimetria negativa por efeito teto e justificativa para procedimentos não paramétricos.
+          </p>
         </div>
-        <a href="2.html" class="btn">Acessar Apresentação →</a>
-      </div>
+        <div class="card-footer">
+          <span class="action-link">
+            Acessar Apresentação
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </div>
+      </a>
 
-      <!-- Encontro 3 -->
-      <div class="card">
-        <div>
-          <div class="card-header">
-            <span class="card-tag">Módulo 3</span>
+      <!-- Módulo 3 -->
+      <a href="3.html" class="card card-m3">
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="module-tag">Módulo 3</span>
+            <span class="slide-count">12 Slides</span>
           </div>
           <h2>Encontro 3</h2>
-          <p>Métricas Descritivas, Composição Fatorial (Autoeficácia e WHOQOL) e Análise de Correlação Bivariada de Spearman.</p>
+          <p>
+            Composição fatorial dos escores, algoritmo sintáxico do WHOQOL-bref, dispersão das variáveis e a matriz de correlações de Spearman (Tabela 5 da tese).
+          </p>
         </div>
-        <a href="3.html" class="btn">Acessar Apresentação →</a>
-      </div>
+        <div class="card-footer">
+          <span class="action-link">
+            Acessar Apresentação
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </div>
+      </a>
 
-      <!-- Encontro 4 -->
-      <div class="card">
-        <div>
-          <div class="card-header">
-            <span class="card-tag">Módulo 4 (Final)</span>
+      <!-- Módulo 4 -->
+      <a href="4.html" class="card card-m4">
+        <div class="card-content">
+          <div class="card-meta">
+            <span class="module-tag">Módulo 4 (Final)</span>
+            <span class="slide-count">11 Slides</span>
           </div>
           <h2>Encontro 4</h2>
-          <p>Modelagem Multivariada: Regressão Linear Múltipla, Parâmetros $B$ e $\beta$, Equações Preditivas e Diagnóstico de Resíduos.</p>
+          <p>
+            Modelagem multivariada OLS, interpretação dos coeficientes B e Beta, equações preditivas, ajuste por fatores sociodemográficos e diagnósticos de multicolinearidade e resíduos.
+          </p>
         </div>
-        <a href="4.html" class="btn">Acessar Apresentação →</a>
-      </div>
-    </div>
+        <div class="card-footer">
+          <span class="action-link">
+            Acessar Apresentação
+            <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </div>
+      </a>
 
-    <footer>
-      Trilha Completa de Treinamento Estatístico — 4 Encontros Estruturados
+    </main>
+
+    <footer class="page-footer">
+      Trilha Completa de Formação Quantitativa &bull; 4 Módulos Interativos
     </footer>
   </div>
+
 </body>
 </html>

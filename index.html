@@ -9,6 +9,7 @@
       --bg-primary: #f4f6f9;
       --bg-card: #ffffff;
       --border-subtle: #d0d7de;
+      --border-strong: #afb8c1;
       --text-main: #1f2328;
       --text-muted: #57606a;
       --accent-navy: #0969da;
@@ -28,7 +29,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
+      padding: 32px 20px;
     }
 
     .container {
@@ -51,62 +52,83 @@
       font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 12px;
     }
 
     h1 {
-      font-size: 1.9rem;
+      font-size: 2rem;
       font-weight: 800;
       margin-bottom: 8px;
+      color: #1f2328;
+      line-height: 1.25;
     }
 
     p.subtitle {
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 1.02rem;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr;
-      gap: 18px;
+      gap: 20px;
     }
 
-    @media (min-width: 600px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (min-width: 900px) {
-      .grid { grid-template-columns: repeat(3, 1fr); }
+    @media (min-width: 680px) {
+      .grid { 
+        grid-template-columns: 1fr 1fr; 
+      }
     }
 
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: 12px;
-      padding: 24px;
+      padding: 24px 26px;
       box-shadow: var(--shadow-card);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
     }
 
     .card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-4px);
       border-color: var(--accent-navy);
+      box-shadow: 0 8px 24px rgba(9, 105, 218, 0.12);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
     }
 
     .card h2 {
-      font-size: 1.25rem;
+      font-size: 1.28rem;
       color: var(--accent-navy);
       margin-bottom: 8px;
     }
 
     .card p {
-      font-size: 0.92rem;
+      font-size: 0.93rem;
       color: var(--text-muted);
-      margin-bottom: 20px;
-      line-height: 1.5;
+      margin-bottom: 22px;
+      line-height: 1.55;
     }
 
     .btn {
@@ -125,6 +147,13 @@
     .btn:hover {
       background: var(--accent-navy-hover);
     }
+
+    footer {
+      text-align: center;
+      margin-top: 36px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -136,30 +165,58 @@
     </header>
 
     <div class="grid">
+      <!-- Encontro 1 -->
       <div class="card">
         <div>
+          <div class="card-header">
+            <span class="card-tag">Módulo 1</span>
+          </div>
           <h2>Encontro 1</h2>
-          <p>Metodologia, Delineamento Observacional, Amostragem por Conveniência e Dimensionamento Amostral.</p>
+          <p>Metodologia, Delineamento Observacional, Amostragem por Conveniência e Dimensionamento Amostral ($N = 193$).</p>
         </div>
         <a href="1.html" class="btn">Acessar Apresentação →</a>
       </div>
 
+      <!-- Encontro 2 -->
       <div class="card">
         <div>
+          <div class="card-header">
+            <span class="card-tag">Módulo 2</span>
+          </div>
           <h2>Encontro 2</h2>
           <p>Análise Exploratória, Estatística Descritiva e Testes de Aderência à Normalidade (KS, SW, Assimetria e Curtose).</p>
         </div>
         <a href="2.html" class="btn">Acessar Apresentação →</a>
       </div>
 
+      <!-- Encontro 3 -->
       <div class="card">
         <div>
+          <div class="card-header">
+            <span class="card-tag">Módulo 3</span>
+          </div>
           <h2>Encontro 3</h2>
-          <p>Métricas Descritivas, Composição Fatorial e Análise de Correlação Bivariada de Spearman.</p>
+          <p>Métricas Descritivas, Composição Fatorial (Autoeficácia e WHOQOL) e Análise de Correlação Bivariada de Spearman.</p>
         </div>
         <a href="3.html" class="btn">Acessar Apresentação →</a>
       </div>
+
+      <!-- Encontro 4 -->
+      <div class="card">
+        <div>
+          <div class="card-header">
+            <span class="card-tag">Módulo 4 (Final)</span>
+          </div>
+          <h2>Encontro 4</h2>
+          <p>Modelagem Multivariada: Regressão Linear Múltipla, Parâmetros $B$ e $\beta$, Equações Preditivas e Diagnóstico de Resíduos.</p>
+        </div>
+        <a href="4.html" class="btn">Acessar Apresentação →</a>
+      </div>
     </div>
+
+    <footer>
+      Trilha Completa de Treinamento Estatístico — 4 Encontros Estruturados
+    </footer>
   </div>
 </body>
 </html>

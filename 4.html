@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encontro 4: Modelagem Multivariada e Regressão Linear Múltipla | Mentoria Estatística Tese Vanna Cabral</title>
+  
+  <!-- MathJax Configuration -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+  <style>
+    :root {
+      --bg-primary: #f4f6f9;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --border-subtle: #d0d7de;
+      --border-strong: #afb8c1;
+      --text-main: #1f2328;
+      --text-muted: #57606a;
+      --accent-navy: #0969da;
+      --accent-navy-dark: #054da7;
+      --accent-gold: #9a6700;
+      --accent-gold-bg: #fff8c5;
+      --accent-gold-border: #d4a72c;
+      --accent-cyan: #057a85;
+      --accent-green: #1a7f37;
+      --accent-green-bg: #dafbe1;
+      --accent-red: #cf222e;
+      --accent-purple: #8250df;
+      --accent-purple-bg: #fbefff;
+      --gradient-header: linear-gradient(135deg, #0969da 0%, #8250df 100%);
+      --shadow-elevation: 0 4px 20px rgba(140, 149, 159, 0.2);
+      --shadow-card: 0 2px 8px rgba(140, 149, 159, 0.12);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.6;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    header {
+      background-color: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-badge {
+      background: #ddf4ff;
+      color: #0969da;
+      border: 1px solid #54aeff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .progress-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #e1e4e8;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--gradient-header);
+      transition: width 0.3s ease;
+    }
+
+    .slider-viewport {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 94%;
+      max-width: 1260px;
+      height: 84vh;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 40px 50px;
+      box-shadow: var(--shadow-elevation);
+      overflow-y: auto;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(16px) scale(0.99);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: text;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: #1f2328;
+      line-height: 1.25;
+    }
+
+    h2 {
+      font-size: 1.48rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      margin-bottom: 20px;
+      border-bottom: 2px solid #eaeef2;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #24292f;
+      margin: 16px 0 10px 0;
+    }
+
+    h4 {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--accent-navy-dark);
+      margin: 12px 0 6px 0;
+    }
+
+    p {
+      color: var(--text-main);
+      font-size: 1.01rem;
+      margin-bottom: 14px;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 18px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      color: var(--text-main);
+      font-size: 0.98rem;
+    }
+
+    strong {
+      color: #0969da;
+      font-weight: 700;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin: 18px 0;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .card {
+      background-color: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 18px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-accent-gold { 
+      border-top: 4px solid var(--accent-gold); 
+      background-color: #fffdf5;
+    }
+    .card-accent-blue { 
+      border-top: 4px solid var(--accent-navy); 
+      background-color: #f7fbff;
+    }
+    .card-accent-green { 
+      border-top: 4px solid var(--accent-green); 
+      background-color: #f6fdf7;
+    }
+    .card-accent-purple { 
+      border-top: 4px solid var(--accent-purple); 
+      background-color: #fcf8ff;
+    }
+    .card-accent-red {
+      border-top: 4px solid var(--accent-red);
+      background-color: #fff8f8;
+    }
+
+    .audit-box {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .audit-good {
+      background: var(--accent-green-bg);
+      border-left: 5px solid var(--accent-green);
+      border-right: 1px solid #afeec0;
+      border-top: 1px solid #afeec0;
+      border-bottom: 1px solid #afeec0;
+      color: #0d4a1e;
+    }
+
+    .audit-bad {
+      background: #ffebe9;
+      border-left: 5px solid var(--accent-red);
+      border-right: 1px solid #ffc1bc;
+      border-top: 1px solid #ffc1bc;
+      border-bottom: 1px solid #ffc1bc;
+      color: #6e1116;
+    }
+
+    .audit-improve {
+      background: var(--accent-gold-bg);
+      border-left: 5px solid var(--accent-gold-border);
+      border-right: 1px solid var(--accent-gold-border);
+      border-top: 1px solid var(--accent-gold-border);
+      border-bottom: 1px solid var(--accent-gold-border);
+      color: #4d2d00;
+    }
+
+    .audit-title {
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .formula-card {
+      background: #f8fafc;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+      margin: 14px 0;
+      font-size: 1.1rem;
+      color: #0969da;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.94rem;
+      background-color: #ffffff;
+    }
+
+    table.custom-table th, 
+    table.custom-table td {
+      padding: 10px 14px;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+    }
+
+    table.custom-table th {
+      background-color: #f1f5f9;
+      color: var(--accent-navy-dark);
+      font-weight: 700;
+    }
+
+    table.custom-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+
+    /* Painéis Interativos e Gráficos */
+    .interactive-panel {
+      background: #ffffff;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 18px;
+      margin: 18px 0;
+      box-shadow: var(--shadow-card);
+    }
+
+    .control-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .control-group label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .control-group select, 
+    .control-group input {
+      padding: 6px 10px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background: #fff;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .stat-pill {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .stat-pill-blue { background: #ddf4ff; color: #0969da; }
+    .stat-pill-green { background: #dafbe1; color: #1a7f37; }
+    .stat-pill-gold { background: #fff8c5; color: #9a6700; }
+    .stat-pill-red { background: #ffebe9; color: #cf222e; }
+
+    footer {
+      background-color: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .slide-counter {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .nav-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      background: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #eef2f6;
+      border-color: var(--border-strong);
+      color: #0969da;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: #1f883d;
+      border-color: #1a7f37;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #1a7f37;
+      color: #ffffff;
+    }
+
+    .slide::-webkit-scrollbar {
+      width: 8px;
+    }
+    .slide::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .slide::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    .kbd {
+      background: #f1f5f9;
+      border: 1px solid #d0d7de;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 0.8rem;
+      font-family: monospace;
+      color: #24292f;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de Progresso Superior -->
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Cabeçalho -->
+  <header>
+    <div class="header-title">
+      <span>Capacitação Estatística para Defesa de Tese</span>
+      <span class="header-badge">Encontro 4 de 4 (Módulo Final)</span>
+    </div>
+    <div style="font-size: 0.88rem; color: var(--text-muted);">
+      Doutoranda: <strong style="color: #24292f;">Vanna Coelho Cabral</strong> | PPGEduCS / UNIVÁS
+    </div>
+  </header>
+
+  <!-- Viewport dos Slides -->
+  <main class="slider-viewport">
+
+    <!-- SLIDE 1: Abertura e Plano da Sessão 4 -->
+    <section class="slide active" data-slide="1">
+      <div style="margin-bottom: 18px;">
+        <span class="header-badge">Módulo 4: Modelagem Multivariada e Equações Preditivas</span>
+        <h1 style="margin-top: 10px;">Regressão Linear Múltipla: Parâmetros, Equações e Impacto Real</h1>
+        <p style="color: var(--accent-navy); font-weight: 600; font-size: 1.05rem;">
+          Objetivo da Sessão Final: Capacitar a doutoranda para dominar cada coeficiente ($B$, $\beta$, $R^2$, $F$, $p$), entender o impacto isolado de cada preditor, interpretar o controle das variáveis sociodemográficas e defender com rigor as Tabelas 6 e 7 da tese.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy);">O que Ensinar Hoje</h3>
+          <ul style="font-size: 0.88rem;">
+            <li>O funcionamento do método de entrada simultânea (Enter) no SPSS.</li>
+            <li>A diferença conceitual entre o coeficiente bruto ($B$) e o coeficiente padronizado ($\beta$).</li>
+            <li>O significado do $R^2$ e $R^2$ ajustado (quanto da variância é explicado).</li>
+            <li>A formulação exata das equações preditivas para cada um dos 4 domínios.</li>
+            <li>O significado das covariáveis qualitativas e o controle de variáveis de confusão.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold);">Frases de Impacto para a Vanna Dominar</h3>
+          <p style="font-size: 0.86rem; color: var(--text-main); line-height: 1.5;">
+            A aluna deve aprender a estruturar suas respostas com o padrão quantitativo rigoroso:
+            <br><em>"O acréscimo de <strong>1 ponto</strong> na escala de autoeficácia explica a elevação média de <strong>B pontos</strong> no domínio de qualidade de vida, <strong>mantidas fixas e controladas todas as demais características dos discentes</strong>."</em>
+          </p>
+        </div>
+
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple);">Localização no Texto da Tese</h3>
+          <ul style="font-size: 0.88rem;">
+            <li><strong>Seção 3.8:</strong> Regressão Linear Múltipla e Diagnósticos (p. 31-32).</li>
+            <li><strong>Seção 4.6.1 e Tabela 6:</strong> Modelos com Escore Global (p. 39-41).</li>
+            <li><strong>Seção 4.6.2 e Tabela 7:</strong> Modelos com Dimensões (p. 42-45).</li>
+            <li><strong>Seção 5.4 e 5.5:</strong> Discussão dos Modelos Ajustados (p. 51-57).</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">Diretriz Pedagógica para a Defesa</div>
+        A regressão linear múltipla representa o ápice analítico da tese de Vanna. Enquanto a correlação de Spearman (Encontro 3) apenas indicou se duas variáveis caminhavam juntas, a regressão <strong>isola o peso de cada fator sob concorrência simultânea</strong>, eliminando o efeito de idade, renda, trabalho e filhos.
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Anatomia Matemática da Regressão Linear Múltipla -->
+    <section class="slide" data-slide="2">
+      <h2>1. Anatomia Matemática da Regressão Linear Múltipla</h2>
+      <p>
+        A tese utilizou o método de entrada simultânea (<em>Enter</em>), no qual todos os preditores são inseridos juntos na equação estatística para disputar a variância do desfecho. A candidata deve entender a arquitetura da equação matricial:
+      </p>
+
+      <div class="card card-accent-blue">
+        <h3 style="color: var(--accent-navy); margin-top:0;">A Equação Geral do Modelo</h3>
+        <div class="formula-card">
+          $$Y_i = \beta_0 + B_1 X_{1i} + B_2 X_{2i} + B_3 X_{3i} + \dots + B_k X_{ki} + \varepsilon_i$$
+        </div>
+        <div class="grid-4" style="font-size: 0.88rem; margin-top: 10px;">
+          <div>
+            <strong>$Y_i$ (Desfecho / Dependente):</strong><br>
+            Pontuação do estudante no domínio do WHOQOL (escala de 0 a 100).
+          </div>
+          <div>
+            <strong>$\beta_0$ (Constante / Intercepto):</strong><br>
+            O valor basal esperado de $Y$ quando todos os preditores $X$ forem iguais a zero.
+          </div>
+          <div>
+            <strong>$B_k$ (Coeficiente Não Padronizado):</strong><br>
+            O impacto na escala real de $Y$ ao variar uma unidade em $X_k$, mantendo os demais constantes.
+          </div>
+          <div>
+            <strong>$\varepsilon_i$ (Resíduo Estocástico):</strong><br>
+            O erro individual de medição ou variância não explicada pelo modelo.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Coeficiente Não Padronizado ($B$)</h3>
+          <ul style="font-size: 0.9rem;">
+            <li>Preserva a unidade métrica original das escalas.</li>
+            <li>Indica quantos <strong>pontos reais na escala do WHOQOL (0 a 100)</strong> o aluno ganha ou perde para cada <strong>1 ponto a mais na escala de autoeficácia (1 a 10)</strong> ou a cada ano de vida.</li>
+            <li>Essencial para formular a <strong>equação preditiva</strong> e estimar escores na prática educacional.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple); margin-top:0;">Coeficiente Padronizado ($\beta$ ou Beta)</h3>
+          <ul style="font-size: 0.9rem;">
+            <li>Elimina as unidades métricas, convertendo tudo para unidades de desvio-padrão ($\sigma$).</li>
+            <li>Permite <strong>comparar diretamente qual preditor é mais influente</strong>, mesmo misturando idade (em anos), autoeficácia (de 1 a 10) e renda.</li>
+            <li>O preditor com maior $|\beta|$ é aquele com maior peso relativo no modelo.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">Regra Prática para a Vanna Falar na Banca</div>
+        <em>"Usamos o coeficiente $B$ quando queremos quantificar o impacto prático em pontos na qualidade de vida discente; usamos o coeficiente Beta ($\beta$) quando a banca pergunta qual das variáveis teve maior força relativa de associação no modelo ajustado."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Justificativa dos Pré-Requisitos e Robustez OLS -->
+    <section class="slide" data-slide="3">
+      <h2>2. Os Pré-Requisitos da Regressão e os Testes Diagnósticos</h2>
+      <p>
+        Conforme registrado na Seção 3.8 da tese (p. 31-32), antes de validar as conclusões dos coeficientes, a pesquisadora examinou os pressupostos formais dos Mínimos Quadrados Ordinários (OLS):
+      </p>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Pressuposto do Modelo</th>
+            <th style="width: 40%;">Diagnóstico Executado na Tese</th>
+            <th style="width: 35%;">Status e Justificativa Científica</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Ausência de Multicolinearidade Estrita</strong></td>
+            <td>Inspeção dos fatores de tolerância ($Tolerance$) e dos Fatores de Inflação da Variância ($VIF$).</td>
+            <td><strong style="color: var(--accent-green);">Atendido.</strong> Valores de $VIF < 5{,}0$ e Tolerâncias $> 0{,}20$, descartando redundância inflacionária severa entre as covariáveis.</td>
+          </tr>
+          <tr>
+            <td><strong>2. Normalidade dos Erros (Resíduos)</strong></td>
+            <td>Análise da dispersão dos resíduos padronizados e gráficos de probabilidade normal (P-P plot).</td>
+            <td><strong style="color: var(--accent-green);">Atendido.</strong> Os resíduos distribuíram-se ao redor de zero sem fuga dos quantis esperados.</td>
+          </tr>
+          <tr>
+            <td><strong>3. Homocedasticidade</strong></td>
+            <td>Inspeção dos resíduos padronizados contra os valores previstos pelo modelo ($\hat{Y}$).</td>
+            <td><strong style="color: var(--accent-green);">Atendido.</strong> Dispersão retangular constante, sem efeito funil (ausência de heterocedasticidade crítica).</td>
+          </tr>
+          <tr>
+            <td><strong>4. Proporção Amostral (Regra de Green)</strong></td>
+            <td>$N = 193$ para modelos contendo 14 preditores (Tabela 6) e 18 preditores (Tabela 7).</td>
+            <td><strong style="color: var(--accent-green);">Atendido.</strong> A regra de Green ($N \ge 50 + 8k$) demanda $194$ sujeitos para 18 variáveis. Com $N = 193$, o poder estatístico ($1 - \beta$) excedeu $99\%$.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-2">
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">O Fator de Inflação da Variância ($VIF$)</h3>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$VIF_j = \frac{1}{1 - R_j^2} = \frac{1}{\text{Tolerância}_j}$$
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            Mede o quanto a variância do estimador $\hat{B}_j$ é inflada devido à correlação com as outras variáveis independentes.
+          </p>
+        </div>
+
+        <div class="card card-accent-red">
+          <h3 style="color: var(--accent-red); margin-top:0;">A Exclusão Automática da Variável "Turno"</h3>
+          <p style="font-size: 0.9rem;">
+            A variável turno foi excluída automaticamente pelo software SPSS em razão de variabilidade nula ou correlação omissa entre os $193$ estudantes que apresentavam dados válidos completos. Se o software mantivesse uma variável constante, a matriz de covariância seria singular e não inversível.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Os Modelos Globais de Autoeficácia (Tabela 6 da Tese) -->
+    <section class="slide" data-slide="4">
+      <h2>3. Os Modelos com Escore Global: Resultados da Tabela 6</h2>
+      <p>
+        Na primeira etapa das regressões, a tese inseriu o escore global de autoeficácia (TotalAE) juntamente com as 13 covariáveis sociodemográficas e ocupacionais para explicar cada um dos 4 domínios da qualidade de vida ($N = 193$).
+      </p>
+
+      <table class="custom-table" style="font-size: 0.9rem;">
+        <thead>
+          <tr>
+            <th>Domínio do WHOQOL</th>
+            <th>Ajuste Global do Modelo</th>
+            <th>$R^2$ ($R^2$ Ajustado)</th>
+            <th>Variáveis Significativas</th>
+            <th>$B$</th>
+            <th>$\beta$</th>
+            <th>$p$-valor</th>
+            <th>IC 95%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2"><strong>Físico</strong></td>
+            <td rowspan="2">$F(14, 178) = 3{,}576$<br>$p < 0{,}001$</td>
+            <td rowspan="2"><strong>0,220</strong><br>(0,158)</td>
+            <td><strong>TotalAE</strong></td>
+            <td><strong>+4,829</strong></td>
+            <td>0,325</td>
+            <td>< 0,001</td>
+            <td>2,805 a 6,854</td>
+          </tr>
+          <tr>
+            <td>Sexo</td>
+            <td>+5,000</td>
+            <td>0,154</td>
+            <td>0,032</td>
+            <td>0,428 a 9,573</td>
+          </tr>
+          <tr>
+            <td><strong>Psicológico</strong></td>
+            <td>$F(14, 178) = 3{,}847$<br>$p < 0{,}001$</td>
+            <td><strong>0,232</strong><br>(0,172)</td>
+            <td><strong>TotalAE</strong><br><em>(Única Significativa)</em></td>
+            <td style="color: var(--accent-green); font-weight:800;">+6,480</td>
+            <td style="color: var(--accent-green); font-weight:800;">0,403</td>
+            <td>< 0,001</td>
+            <td>4,303 a 8,657</td>
+          </tr>
+          <tr>
+            <td rowspan="4"><strong>Relações Sociais</strong></td>
+            <td rowspan="4">$F(14, 178) = 3{,}772$<br>$p < 0{,}001$</td>
+            <td rowspan="4"><strong>0,229</strong><br>(0,168)</td>
+            <td><strong>TotalAE</strong></td>
+            <td><strong>+6,460</strong></td>
+            <td>0,335</td>
+            <td>< 0,001</td>
+            <td>3,847 a 9,073</td>
+          </tr>
+          <tr>
+            <td>Idade</td>
+            <td>-0,594</td>
+            <td>-0,247</td>
+            <td>0,016</td>
+            <td>-1,076 a -0,112</td>
+          </tr>
+          <tr>
+            <td>Estado Civil</td>
+            <td>-13,967</td>
+            <td>-0,253</td>
+            <td>0,007</td>
+            <td>-24,154 a -3,781</td>
+          </tr>
+          <tr>
+            <td>Horas de Trabalho</td>
+            <td>-4,899</td>
+            <td>-0,155</td>
+            <td>0,025</td>
+            <td>-9,186 a -0,612</td>
+          </tr>
+          <tr>
+            <td rowspan="2"><strong>Meio Ambiente</strong></td>
+            <td rowspan="2">$F(14, 178) = 5{,}706$<br>$p < 0{,}001$</td>
+            <td rowspan="2" style="color: var(--accent-navy); font-weight:800;"><strong>0,310</strong><br>(0,255)<br><em>Maior $R^2$</em></td>
+            <td><strong>TotalAE</strong></td>
+            <td><strong>+5,432</strong></td>
+            <td>0,338</td>
+            <td>< 0,001</td>
+            <td>3,372 a 7,491</td>
+          </tr>
+          <tr>
+            <td>Renda Familiar</td>
+            <td>-3,589</td>
+            <td>-0,141</td>
+            <td>0,043</td>
+            <td>-7,068 a -0,109</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">O Triunfo do Escore Global da Autoeficácia</div>
+        O escore TotalAE permaneceu estatisticamente significativo com $p < 0{,}001$ <strong>em todos os quatro domínios de qualidade de vida</strong>, mesmo na presença de 13 variáveis de controle. O maior peso padronizado ocorreu no <strong>Domínio Psicológico ($\beta = 0{,}403$)</strong>, provando que a autoconfiança formativa é o maior recurso protetivo da saúde psíquica na FDSM.
+      </div>
+    </section>
+
+    <!-- SLIDE 5: As Equações Preditivas do Escore Global (Quanto Impacta Cada Unidade) -->
+    <section class="slide" data-slide="5">
+      <h2>4. As Equações Preditivas Formais: Interpretando Unidade por Unidade</h2>
+      <p>
+        A candidata deve memorizar e expressar as formulações empíricas exatas originadas da Tabela 6. Cada equação quantifica o ganho marginal direto no bem-estar dos discentes de Direito.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">Domínio Psicológico</h3>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$\hat{Y}_{\text{Psico}} = \beta_0 + 6{,}480 \cdot (\text{TotalAE})$$
+          </div>
+          <p style="font-size: 0.92rem;">
+            <strong>A Frase Mandatória para a Banca:</strong><br>
+            <em>"O aumento de <strong>1 unidade</strong> no escore global de autoeficácia (em escala de 1 a 10) esteve associado ao acréscimo médio de <strong>6,480 pontos</strong> no escore do domínio psicológico (em escala de 0 a 100), mantidas constantes todas as variáveis sociodemográficas, acadêmicas e ocupacionais ($p < 0{,}001$)."</em>
+          </p>
+        </div>
+
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">Domínio Físico</h3>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$\hat{Y}_{\text{Físico}} = \beta_0 + 4{,}829 \cdot (\text{TotalAE}) + 5{,}000 \cdot (\text{Sexo})$$
+          </div>
+          <p style="font-size: 0.92rem;">
+            <strong>A Frase Mandatória para a Banca:</strong><br>
+            <em>"O aumento de <strong>1 unidade</strong> na autoeficácia global explica uma elevação média de <strong>4,829 pontos</strong> no domínio físico ($p < 0{,}001$). Adicionalmente, a transição de categoria de sexo respondeu por um deslocamento médio independente de <strong>5,000 pontos</strong> ($p = 0{,}032$)."</em>
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 14px;">
+        <div class="card card-accent-purple">
+          <h3 style="color: var(--accent-purple); margin-top:0;">Domínio Relações Sociais</h3>
+          <div class="formula-card" style="font-size: 0.88rem;">
+            $$\hat{Y}_{\text{Sociais}} = \beta_0 + 6{,}460(\text{AE}) - 0{,}594(\text{Idade}) - 13{,}967(\text{Civil}) - 4{,}899(\text{Trab})$$
+          </div>
+          <p style="font-size: 0.9rem;">
+            <strong>Impacto Múltiplo Isolado:</strong>
+            <br>- Autoeficácia: $+1 \text{ ponto} \implies \mathbf{+6{,}460 \text{ pontos}}$ ($p < 0{,}001$).
+            <br>- Idade: $+1 \text{ ano de vida} \implies \mathbf{-0{,}594 \text{ pontos}}$ ($p = 0{,}016$).
+            <br>- Carga de Trabalho: $+1 \text{ nível ocupacional} \implies \mathbf{-4{,}899 \text{ pontos}}$ ($p = 0{,}025$).
+          </p>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">Domínio Meio Ambiente</h3>
+          <div class="formula-card" style="font-size: 0.92rem;">
+            $$\hat{Y}_{\text{Ambiente}} = \beta_0 + 5{,}432 \cdot (\text{TotalAE}) - 3{,}589 \cdot (\text{Renda})$$
+          </div>
+          <p style="font-size: 0.92rem;">
+            <strong>O Modelo com Maior Explicação ($R^2 = 31{,}0\%$):</strong><br>
+            <em>"A autoeficácia global associou-se positivamente com acréscimo médio de <strong>5,432 pontos</strong> ($p < 0{,}001$). A renda familiar também figurou com coeficiente significativo de $-3{,}589$ pontos ($p = 0{,}043$)."</em>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Os Modelos com as 5 Dimensões da Autoeficácia (Tabela 7 da Tese) -->
+    <section class="slide" data-slide="6">
+      <h2>5. Os Modelos Dimensionais: A Matriz Ajustada da Tabela 7</h2>
+      <p>
+        Na segunda etapa, o escore TotalAE foi substituído pelas <strong>5 dimensões fracionadas da autoeficácia</strong> inseridas em conjunto com as covariáveis ($18$ variáveis simultâneas, $N = 193$). A tabela revela o comportamento microdimensional:
+      </p>
+
+      <table class="custom-table" style="font-size: 0.88rem;">
+        <thead>
+          <tr>
+            <th>Domínio</th>
+            <th>Ajuste Global</th>
+            <th>$R^2$ ($R^2$ Aj.)</th>
+            <th>Variáveis Estatisticamente Significativas</th>
+            <th>$B$</th>
+            <th>$\beta$</th>
+            <th>$p$-valor</th>
+            <th>IC 95%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="2"><strong>Físico</strong></td>
+            <td rowspan="2">$F(18, 174) = 3{,}209$<br>$p < 0{,}001$</td>
+            <td rowspan="2"><strong>0,249</strong><br>(0,172)</td>
+            <td>Sexo</td>
+            <td>+4,938</td>
+            <td>0,152</td>
+            <td>0,034</td>
+            <td>0,370 a 9,507</td>
+          </tr>
+          <tr>
+            <td>Presença de Filhos</td>
+            <td>+14,158</td>
+            <td>0,342</td>
+            <td>0,006</td>
+            <td>4,051 a 24,265</td>
+          </tr>
+          <tr>
+            <td><strong>Psicológico</strong></td>
+            <td>$F(18, 174) = 3{,}969$<br>$p < 0{,}001$</td>
+            <td><strong>0,291</strong><br>(0,218)</td>
+            <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">
+              Regulação da Formação (ARF)<br><small>Única Dimensão Significativa</small>
+            </td>
+            <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">+6,583</td>
+            <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">0,485</td>
+            <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">< 0,001</td>
+            <td>3,129 a 10,037</td>
+          </tr>
+          <tr>
+            <td rowspan="4"><strong>Relações Sociais</strong></td>
+            <td rowspan="4">$F(18, 174) = 4{,}152$<br>$p < 0{,}001$</td>
+            <td rowspan="4"><strong>0,300</strong><br>(0,228)</td>
+            <td><strong>Ações Proativas (AAP)</strong></td>
+            <td style="color: var(--accent-green); font-weight:700;">+4,916</td>
+            <td>0,361</td>
+            <td>0,003</td>
+            <td>1,672 a 8,160</td>
+          </tr>
+          <tr>
+            <td><strong>Gestão Acadêmica (AGA)</strong></td>
+            <td style="color: var(--accent-red); font-weight:700;">-3,895</td>
+            <td>-0,223</td>
+            <td>0,020</td>
+            <td>-7,160 a -0,631</td>
+          </tr>
+          <tr>
+            <td>Estado Civil</td>
+            <td>-15,230</td>
+            <td>-0,276</td>
+            <td>0,005</td>
+            <td>-25,914 a -4,545</td>
+          </tr>
+          <tr>
+            <td>Presença de Filhos</td>
+            <td>+17,082</td>
+            <td>0,318</td>
+            <td>0,009</td>
+            <td>4,414 a 29,750</td>
+          </tr>
+          <tr>
+            <td><strong>Meio Ambiente</strong></td>
+            <td>$F(18, 174) = 5{,}104$<br>$p < 0{,}001$</td>
+            <td><strong>0,346</strong><br>(0,278)</td>
+            <td>Presença de Filhos</td>
+            <td>+14,197</td>
+            <td>0,317</td>
+            <td>0,007</td>
+            <td>3,986 a 24,408</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-2" style="margin-top: 10px;">
+        <div class="audit-box audit-good">
+          <div class="audit-title">A Soberania da Regulação da Formação (ARF)</div>
+          No Domínio Psicológico, ARF obteve <strong>$\beta = 0{,}485$ ($B = 6{,}583; p < 0{,}001$)</strong>. Isso significa que ao controlar todas as outras 4 dimensões de autoeficácia e todas as 13 covariáveis, para cada 1 ponto na escala de ARF, o discente ganha <strong>6,58 pontos reais em saúde mental</strong>.
+        </div>
+        <div class="audit-box audit-bad">
+          <div class="audit-title">O que Ocorreu nos Domínios Físico e Meio Ambiente?</div>
+          Nenhuma das 5 dimensões isoladas manteve $p < 0{,}05$. Por quê? Porque as dimensões compartilham forte correlação entre si. Quando colocadas simultaneamente, <strong>a variância é fragmentada</strong> e nenhuma dimensão isolada consegue reivindicar o efeito sozinha.
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: As Variáveis Qualitativas e a Ausência da Categoria de Referência -->
+    <section class="slide" data-slide="7">
+      <h2>6. As Variáveis Qualitativas e a Questão das Categorias de Referência</h2>
+      <p>
+        Bancas examinadoras atentas questionarão por que as variáveis categóricas (Sexo, Estado Civil, Filhos e Renda) receberam coeficientes na regressão, mas as conclusões textuais foram cautelosas. A candidata deve conhecer o fundamento técnico desse ponto.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">O Funcionamento de Variáveis Dummies</h3>
+          <p style="font-size: 0.92rem;">
+            Na regressão linear, variáveis categóricas dicotômicas precisam ser convertidas em variáveis indicadoras (dummies: 0 ou 1):
+          </p>
+          <div class="formula-card" style="font-size: 0.95rem;">
+            $$Y = \beta_0 + B_{\text{Dummy}} \cdot (\text{Dummy}) \implies \begin{cases} Y = \beta_0, & \text{se Grupo de Referência (0)} \\ Y = \beta_0 + B, & \text{se Grupo de Comparação (1)} \end{cases}$$
+          </div>
+          <p style="font-size: 0.88rem; color: var(--text-muted);">
+            O coeficiente $B$ expressa a diferença média exata entre o grupo codificado como 1 em relação ao grupo de referência (0).
+          </p>
+        </div>
+
+        <div class="card card-accent-gold">
+          <h3 style="color: var(--accent-gold); margin-top:0;">A Nota de Rodapé Oficial das Tabelas 6 e 7</h3>
+          <p style="font-size: 0.9rem; font-style: italic; color: #4d2d00;">
+            "Para as variáveis categóricas sexo, estado civil, renda e presença de filhos, a interpretação da direção das associações depende da codificação e das categorias de referência utilizadas na base de dados, informações que não estavam identificadas nas saídas estatísticas disponíveis."
+          </p>
+          <p style="font-size: 0.88rem; margin-top: 8px;">
+            A tese demonstrou maturidade metodológica ao <strong>não inventar conclusões polares</strong> no texto principal quando os rótulos de valores (Value Labels) do arquivo bruto exportado não estavam expressos na folha de resultados do SPSS.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve">
+        <div class="audit-title">Como a Vanna Deve Explicar Isso com Elegância Científica</div>
+        <em>"Professor(a), detectamos que Sexo ($p = 0{,}032$), Filhos ($p = 0{,}006$) e Estado Civil ($p = 0{,}007$) foram determinantes significativos no ajustamento multivariado. Contudo, em estrito respeito ao rigor formal e à transparência documental da pesquisa, registramos que a inferência polar definitiva dependeria da auditoria da matriz do banco .SAV original, optando por não induzir a banca a interpretações especulativas."</em>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: O Laboratório Interativo da Regressão (Simulador Dinâmico) -->
+    <section class="slide" data-slide="8">
+      <h2>7. Laboratório Interativo: Simulador da Equação Preditiva da Tese</h2>
+      <p>
+        Selecione um dos modelos reais da tese ou altere os valores para visualizar em tempo real a inclinação da reta de regressão ($B$), a faixa do Intervalo de Confiança de 95% e o valor previsto do domínio de qualidade de vida.
+      </p>
+
+      <div class="interactive-panel">
+        <div class="control-row">
+          <div class="control-group" style="flex: 2;">
+            <label>Selecione o Modelo da Tese:</label>
+            <select id="regModelSelect" onchange="applyRegressionPreset()">
+              <option value="psi_totalae" selected>Domínio Psicológico ~ TotalAE (B = +6.480, p < 0.001, R² = 0.232)</option>
+              <option value="fis_totalae">Domínio Físico ~ TotalAE (B = +4.829, p < 0.001, R² = 0.220)</option>
+              <option value="soc_totalae">Relações Sociais ~ TotalAE (B = +6.460, p < 0.001, R² = 0.229)</option>
+              <option value="amb_totalae">Meio Ambiente ~ TotalAE (B = +5.432, p < 0.001, R² = 0.310)</option>
+              <option value="psi_arf">Domínio Psicológico ~ Regulação (ARF) (B = +6.583, p < 0.001, R² = 0.291)</option>
+              <option value="soc_aap">Relações Sociais ~ Ações Proativas (AAP) (B = +4.916, p = 0.003, R² = 0.300)</option>
+              <option value="soc_aga">Relações Sociais ~ Gestão Acadêmica (AGA) (B = -3.895, p = 0.020, R² = 0.300)</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label>Escore Autoeficácia ($X$):</label>
+            <input type="number" id="inputXVal" value="7.22" step="0.1" min="1" max="10" onchange="drawRegressionCanvas()">
+          </div>
+
+          <div class="control-group">
+            <label>Coeficiente $B$:</label>
+            <input type="number" id="inputBVal" value="6.480" step="0.1" onchange="drawRegressionCanvas()">
+          </div>
+
+          <div class="control-group">
+            <label>Constante ($\beta_0$):</label>
+            <input type="number" id="inputConstVal" value="16.25" step="0.5" onchange="drawRegressionCanvas()">
+          </div>
+        </div>
+
+        <div class="canvas-container">
+          <canvas id="regressionCanvas"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.88rem;">
+          <div>
+            <span class="stat-pill stat-pill-blue">Linha Azul: Reta Média de Regressão</span>
+            <span class="stat-pill stat-pill-green">Faixa Verde: Intervalo de Confiança de 95%</span>
+            <span class="stat-pill stat-pill-gold" id="predValPill">Previsão $\hat{Y} = 63,04$ pontos</span>
+          </div>
+          <div id="equationDisplay" style="font-weight: 700; color: var(--accent-navy);">
+            $$\hat{Y} = 16{,}25 + 6{,}480 \cdot (X)$$
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Visualizador Interativo da Curva de Decisão do Teste F e t (p-valores) -->
+    <section class="slide" data-slide="9">
+      <h2>8. Visualizador Dinâmico: A Distribuição do Teste F e o Limiar de Decisão</h2>
+      <p>
+        Para validar a regressão perante a banca, Vanna deve demonstrar que compreende o significado do teste de significância global do modelo ($F$ de ANOVA) e do teste individual dos parâmetros ($t$).
+      </p>
+
+      <div class="interactive-panel">
+        <div class="control-row">
+          <div class="control-group" style="flex: 1;">
+            <label>Selecione a Tabela e o Modelo:</label>
+            <select id="fModelSelect" onchange="updateFDistribution()">
+              <option value="mod_psi" selected>Modelo Psicológico (Tabela 6): F(14, 178) = 3.847, p < 0.001</option>
+              <option value="mod_fis">Modelo Físico (Tabela 6): F(14, 178) = 3.576, p < 0.001</option>
+              <option value="mod_soc">Modelo Relações Sociais (Tabela 6): F(14, 178) = 3.772, p < 0.001</option>
+              <option value="mod_amb">Modelo Meio Ambiente (Tabela 6): F(14, 178) = 5.706, p < 0.001</option>
+              <option value="mod_dim_amb">Modelo Meio Ambiente Dimensional (Tabela 7): F(18, 174) = 5.104, p < 0.001</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="canvas-container" style="height: 230px;">
+          <canvas id="fDistCanvas"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.88rem;">
+          <div id="fStatsText" style="color: var(--text-main); font-weight: 600;">
+            Estatística $F = 3{,}847$ | $gl_1 = 14$; $gl_2 = 178$ | $F_{\text{crítico}} = 1{,}75$ ($\alpha = 0{,}05$)
+          </div>
+          <div>
+            <span class="stat-pill stat-pill-green">Região de Rejeição de H0: p < 0,001 (Modelo Validado)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="audit-box audit-good">
+        <div class="audit-title">O que o Teste F Prova para a Banca?</div>
+        O teste $F$ testa a hipótese nula global: $H_0: \beta_1 = \beta_2 = \dots = \beta_k = 0$. Como em todos os modelos da tese o $F$ calculado situou-se entre $3{,}209$ e $5{,}706$ (muito além do valor crítico de $1{,}75$), <strong>rejeita-se com segurança absoluta a hipótese de que as variáveis entraram por acaso</strong>. O conjunto de variáveis prediz significativamente a qualidade de vida.
+      </div>
+    </section>
+
+    <!-- SLIDE 10: O Roteiro de Sabatina Final para a Vanna (Perguntas e Respostas) -->
+    <section class="slide" data-slide="10">
+      <h2>9. Simulação da Sabatina Final de Doutorado: Regressão Linear</h2>
+      <p>
+        Este roteiro treina a candidata para responder com autoridade técnica às perguntas mais temidas da banca examinadora sobre as Tabelas 6 e 7.
+      </p>
+
+      <div class="card" style="margin-bottom: 14px; background: #fdfefe;">
+        <h4 style="color: var(--accent-navy); margin-bottom: 6px;">Pergunta 1 da Banca: "O seu R² foi de apenas 22% a 34%. Isso não significa que o seu modelo é fraco para explicar a qualidade de vida?"</h4>
+        <p style="font-size: 0.94rem; color: var(--text-main);">
+          <strong>Resposta Segura da Vanna:</strong> <em>"Pelo contrário, Professor. Em ciências sociais, educacionais e comportamentais, coeficientes de determinação entre 22% e 34% (com $R^2$ ajustados de até 27,8%) são considerados expressivos e substanciais. A qualidade de vida é um fenômeno de altíssima complexidade ontológica, influenciado por genética, nutrição, moradia, neuroquímica e dinâmicas afetivas. Explicar até um terço de toda a variância de um domínio de vida exclusivamente a partir de crenças de autoeficácia e variáveis de perfil discente constitui um achado de grande relevância pedagógica e preditiva."</em>
+        </p>
+      </div>
+
+      <div class="card" style="margin-bottom: 14px; background: #fdfefe;">
+        <h4 style="color: var(--accent-navy); margin-bottom: 6px;">Pergunta 2 da Banca: "Por que no Domínio Físico da Tabela 7 nenhuma dimensão de autoeficácia foi significativa, mas na Tabela 6 o escore global foi altamente significativo?"</h4>
+        <p style="font-size: 0.94rem; color: var(--text-main);">
+          <strong>Resposta Segura da Vanna:</strong> <em>"Esse resultado exemplifica o fenômeno de partilha de variância comum decorrente da correlação interna entre as 5 dimensões da escala de Polydoro. Quando agrupadas no escore TotalAE, o efeito unificado do construto ganha estabilidade estatística e atinge significância ($B = 4{,}829; p < 0{,}001$). Quando fracionadas em 5 preditores simultâneos, a variância comum é diluída entre elas, de modo que nenhuma dimensão isolada consegue reivindicar significância exclusiva após o controle de sexo e presença de filhos."</em>
+        </p>
+      </div>
+
+      <div class="card" style="background: #fdfefe;">
+        <h4 style="color: var(--accent-navy); margin-bottom: 6px;">Pergunta 3 da Banca: "A senhora encontrou B = -3,895 para Gestão Acadêmica nas Relações Sociais. A organização do tempo prejudica as amizades dos estudantes?"</h4>
+        <p style="font-size: 0.94rem; color: var(--text-main);">
+          <strong>Resposta Segura da Vanna:</strong> <em>"Não se trata de uma relação causal destrutiva geral, Professor. Na análise bivariada bruta, a correlação entre AGA e relações sociais foi positiva ($r_s = +0{,}100$). Esse coeficiente negativo surgiu exclusivamente no modelo multivariado ajustado (Tabela 7), representando um efeito de supressão condicional. Ao fixarmos o nível de sociabilidade e proatividade discente no modelo, o componente estrito de dedicação ao cumprimento rígido de cronogramas e prazos acadêmicos isola a menor disponibilidade de tempo para o convívio social, gerando a retração observada."</em>
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Síntese dos 4 Encontros e Conclusão Geral da Mentoria -->
+    <section class="slide" data-slide="11">
+      <h2>10. Síntese Geral da Trilha de Mentoria e Mensagem Final</h2>
+      <p>
+        Parabéns, Doutoranda Vanna Cabral! Você concluiu a jornada completa de capacitação estatística para a defesa da sua tese de doutorado.
+      </p>
+
+      <div class="grid-2">
+        <div class="card card-accent-green">
+          <h3 style="color: var(--accent-green); margin-top:0;">O Domínio Teórico Consolidado nos 4 Encontros</h3>
+          <ul style="font-size: 0.88rem;">
+            <li><strong>Encontro 1:</strong> Delineamento transversal analítico, amostragem por conveniência ($N = 193$), erro amostral de 7,05% e poder a posteriori $> 90\%$.</li>
+            <li><strong>Encontro 2:</strong> Rejeição da normalidade por KS e SW ($p < 0{,}05$), assimetria negativa (efeito teto na autoeficácia) e justificativa da não normalidade.</li>
+            <li><strong>Encontro 3:</strong> Formação dos escores fatoriais (médias das médias e sintaxe do WHOQOL), dispersões amostrais e a matriz de correlação de Spearman (Tabela 5).</li>
+            <li><strong>Encontro 4:</strong> Modelos multivariados OLS, coeficientes $B$ e $\beta$, equações preditivas, partilha de variância e efeitos de ajuste sociodemográfico.</li>
+          </ul>
+        </div>
+
+        <div class="card card-accent-blue">
+          <h3 style="color: var(--accent-navy); margin-top:0;">A Conclusão Científica Nuclear da Sua Tese</h3>
+          <p style="font-size: 0.92rem; text-align: justify;">
+            As crenças de autoeficácia discente constituem <strong>fatores associados independentes e protetivos para todos os domínios de qualidade de vida</strong> dos estudantes de Direito da FDSM. 
+          </p>
+          <p style="font-size: 0.92rem; text-align: justify;">
+            Especialmente no âmbito da saúde psicológica discente, a capacidade percebida de regular a própria trajetória formativa (ARF) responde pelo maior ganho marginal observado, fornecendo subsídios empíricos sólidos para políticas institucionais de acolhimento e suporte acadêmico na faculdade.
+          </p>
+        </div>
+      </div>
+
+      <div class="audit-box audit-improve" style="text-align: center; margin-top: 18px;">
+        <div class="audit-title" style="display: block;">Instrução Final para a Apresentação Oral</div>
+        <em>"Mantenha a postura serena, fale com clareza a partir dos dados do seu trabalho e lembre-se: quem mais conhece os dados desses 193 alunos de Pouso Alegre no planeta é você. A estatística foi o seu instrumento; o conhecimento gerado é a sua conquista de Doutora!"</em>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Rodapé e Navegação -->
+  <footer>
+    <div class="slide-counter" id="slideCounter">Slide 1 de 11</div>
+    <div style="display: flex; gap: 8px; align-items: center; color: var(--text-muted); font-size: 0.88rem;">
+      <span class="kbd">←</span> <span class="kbd">→</span> Navegação pelo teclado | <span class="kbd">Espaço</span> Avançar
+    </div>
+    <div class="nav-controls">
+      <button class="btn" id="prevBtn" disabled>
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+        Anterior
+      </button>
+      <button class="btn btn-primary" id="nextBtn">
+        Próximo
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Script de Controle dos Slides e Gráficos Interativos -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const slides = document.querySelectorAll('.slide');
+      const totalSlides = slides.length;
+      let currentSlide = 1;
+
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const slideCounter = document.getElementById('slideCounter');
+      const progressBar = document.getElementById('progressBar');
+
+      function updateSlide(newIndex) {
+        if (newIndex < 1 || newIndex > totalSlides) return;
+
+        slides.forEach(slide => {
+          slide.classList.remove('active');
+        });
+
+        currentSlide = newIndex;
+        const activeSlide = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+        if (activeSlide) {
+          activeSlide.classList.add('active');
+          activeSlide.scrollTop = 0;
+        }
+
+        prevBtn.disabled = (currentSlide === 1);
+        nextBtn.disabled = (currentSlide === totalSlides);
+
+        slideCounter.textContent = `Slide ${currentSlide} de ${totalSlides}`;
+
+        const progressPct = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+        progressBar.style.width = `${progressPct}%`;
+
+        // Reprocessamento das fórmulas matemáticas no slide ativo
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([activeSlide]);
+        }
+
+        // Renderização dos gráficos em Canvas quando o slide estiver visível
+        if (currentSlide === 8) {
+          setTimeout(drawRegressionCanvas, 50);
+        } else if (currentSlide === 9) {
+          setTimeout(updateFDistribution, 50);
+        }
+      }
+
+      prevBtn.addEventListener('click', () => updateSlide(currentSlide - 1));
+      nextBtn.addEventListener('click', () => updateSlide(currentSlide + 1));
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === 'Spacebar' || e.key === ' ') {
+          e.preventDefault();
+          updateSlide(currentSlide + 1);
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updateSlide(currentSlide - 1);
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          updateSlide(1);
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          updateSlide(totalSlides);
+        }
+      });
+
+      // Inicialização do Slide Deck
+      updateSlide(1);
+
+      // Definições dos Presets de Regressão (Slide 8)
+      window.regPresets = {
+        'psi_totalae': { b: 6.480, const: 16.25, x: 7.22, name: 'Domínio Psicológico', xName: 'TotalAE', r2: '0.232' },
+        'fis_totalae': { b: 4.829, const: 31.84, x: 7.22, name: 'Domínio Físico', xName: 'TotalAE', r2: '0.220' },
+        'soc_totalae': { b: 6.460, const: 20.85, x: 7.22, name: 'Relações Sociais', xName: 'TotalAE', r2: '0.229' },
+        'amb_totalae': { b: 5.432, const: 30.23, x: 7.22, name: 'Meio Ambiente', xName: 'TotalAE', r2: '0.310' },
+        'psi_arf': { b: 6.583, const: 15.24, x: 7.26, name: 'Domínio Psicológico', xName: 'ARF', r2: '0.291' },
+        'soc_aap': { b: 4.916, const: 33.72, x: 6.87, name: 'Relações Sociais', xName: 'AAP', r2: '0.300' },
+        'soc_aga': { b: -3.895, const: 96.50, x: 7.45, name: 'Relações Sociais', xName: 'AGA', r2: '0.300' }
+      };
+
+      window.applyRegressionPreset = function() {
+        const val = document.getElementById('regModelSelect').value;
+        const p = window.regPresets[val];
+        if (p) {
+          document.getElementById('inputBVal').value = p.b;
+          document.getElementById('inputConstVal').value = p.const;
+          document.getElementById('inputXVal').value = p.x;
+          drawRegressionCanvas();
+        }
+      };
+
+      window.drawRegressionCanvas = function() {
+        const canvas = document.getElementById('regressionCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.parentElement.clientWidth;
+        const h = canvas.parentElement.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+
+        const b = parseFloat(document.getElementById('inputBVal').value) || 0;
+        const c = parseFloat(document.getElementById('inputConstVal').value) || 0;
+        const xCur = parseFloat(document.getElementById('inputXVal').value) || 7.22;
+
+        const padding = { top: 25, right: 35, bottom: 40, left: 55 };
+        const plotW = w - padding.left - padding.right;
+        const plotH = h - padding.top - padding.bottom;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // Grade de Fundo
+        ctx.strokeStyle = '#eef2f6';
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i++) {
+          const yPos = padding.top + (plotH / 5) * i;
+          ctx.beginPath();
+          ctx.moveTo(padding.left, yPos);
+          ctx.lineTo(w - padding.right, yPos);
+          ctx.stroke();
+
+          // Rótulos do Eixo Y (0 a 100)
+          ctx.fillStyle = '#8c959f';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'right';
+          const yLabel = Math.round(100 - (i * 20));
+          ctx.fillText(yLabel, padding.left - 8, yPos + 3);
+        }
+
+        // Rótulos do Eixo X (1 a 10)
+        for (let i = 1; i <= 10; i++) {
+          const xPos = padding.left + ((i - 1) / 9) * plotW;
+          ctx.beginPath();
+          ctx.moveTo(xPos, padding.top);
+          ctx.lineTo(xPos, h - padding.bottom);
+          ctx.stroke();
+
+          ctx.fillStyle = '#8c959f';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(i, xPos, h - padding.bottom + 16);
+        }
+
+        // Títulos dos Eixos
+        ctx.fillStyle = '#57606a';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Escore de Autoeficácia (Escala de 1 a 10)', padding.left + plotW / 2, h - 8);
+
+        ctx.save();
+        ctx.translate(14, padding.top + plotH / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('Qualidade de Vida Prevista (0 a 100)', 0, 0);
+        ctx.restore();
+
+        // Mapeamento de Coordenadas
+        const mapX = val => padding.left + ((val - 1) / 9) * plotW;
+        const mapY = val => padding.top + ((100 - val) / 100) * plotH;
+
+        // Faixa de Confiança de 95% (Área Sombreada)
+        ctx.beginPath();
+        const se = 3.5; // Margem típica do erro-padrão da média prevista
+        for (let x = 1; x <= 10; x += 0.25) {
+          const y = c + b * x;
+          const yUpper = Math.min(100, y + se * 1.96);
+          const px = mapX(x);
+          const py = mapY(yUpper);
+          if (x === 1) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        for (let x = 10; x >= 1; x -= 0.25) {
+          const y = c + b * x;
+          const yLower = Math.max(0, y - se * 1.96);
+          const px = mapX(x);
+          const py = mapY(yLower);
+          ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(26, 127, 55, 0.12)';
+        ctx.fill();
+
+        // Linha Principal de Regressão (Azul)
+        ctx.beginPath();
+        const yStart = Math.max(0, Math.min(100, c + b * 1));
+        const yEnd = Math.max(0, Math.min(100, c + b * 10));
+        ctx.moveTo(mapX(1), mapY(yStart));
+        ctx.lineTo(mapX(10), mapY(yEnd));
+        ctx.strokeStyle = '#0969da';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Ponto Atual Selecionado
+        const yCur = Math.max(0, Math.min(100, c + b * xCur));
+        const pxCur = mapX(xCur);
+        const pyCur = mapY(yCur);
+
+        // Linhas Guia Tracejadas
+        ctx.beginPath();
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = '#9a6700';
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(pxCur, h - padding.bottom);
+        ctx.lineTo(pxCur, pyCur);
+        ctx.lineTo(padding.left, pyCur);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Marcador do Ponto
+        ctx.beginPath();
+        ctx.arc(pxCur, pyCur, 6, 0, Math.PI * 2);
+        ctx.fillStyle = '#cf222e';
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Atualizar Textos Informativos
+        document.getElementById('predValPill').textContent = `Previsão Ŷ = ${yCur.toFixed(2)} pontos`;
+        const eqText = `$$\\hat{Y} = ${c.toFixed(2)} ${b >= 0 ? '+' : ''} ${b.toFixed(3)} \\cdot (X)$$`;
+        document.getElementById('equationDisplay').innerHTML = eqText;
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([document.getElementById('equationDisplay')]);
+        }
+      };
+
+      // Definições do Gráfico de Distribuição F (Slide 9)
+      window.fPresets = {
+        'mod_psi': { f: 3.847, df1: 14, df2: 178, p: '< 0.001', name: 'Domínio Psicológico' },
+        'mod_fis': { f: 3.576, df1: 14, df2: 178, p: '< 0.001', name: 'Domínio Físico' },
+        'mod_soc': { f: 3.772, df1: 14, df2: 178, p: '< 0.001', name: 'Relações Sociais' },
+        'mod_amb': { f: 5.706, df1: 14, df2: 178, p: '< 0.001', name: 'Meio Ambiente' },
+        'mod_dim_amb': { f: 5.104, df1: 18, df2: 174, p: '< 0.001', name: 'Meio Ambiente Dimensional' }
+      };
+
+      window.updateFDistribution = function() {
+        const canvas = document.getElementById('fDistCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.parentElement.clientWidth;
+        const h = canvas.parentElement.clientHeight;
+        canvas.width = w;
+        canvas.height = h;
+
+        const val = document.getElementById('fModelSelect').value;
+        const m = window.fPresets[val];
+
+        const padding = { top: 20, right: 30, bottom: 35, left: 45 };
+        const plotW = w - padding.left - padding.right;
+        const plotH = h - padding.top - padding.bottom;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const fCrit = 1.75; // F crítico para alpha = 0.05
+        const maxF = 7.0;
+
+        const mapX = x => padding.left + (x / maxF) * plotW;
+        const mapY = y => padding.top + plotH - (y * plotH * 1.3);
+
+        // Densidade teórica aproximada de F (Fisher-Snedecor)
+        function fDensity(x) {
+          if (x <= 0) return 0;
+          return Math.pow(x, 0.5) * Math.exp(-0.8 * x) * 1.5;
+        }
+
+        // Desenhar Área Crítica (Rejeição H0 para alpha = 0.05)
+        ctx.beginPath();
+        for (let x = fCrit; x <= maxF; x += 0.05) {
+          const y = fDensity(x);
+          const px = mapX(x);
+          const py = mapY(y);
+          if (x === fCrit) ctx.moveTo(px, mapY(0));
+          ctx.lineTo(px, py);
+        }
+        ctx.lineTo(mapX(maxF), mapY(0));
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(207, 34, 46, 0.2)';
+        ctx.fill();
+
+        // Desenhar Curva de Densidade de F
+        ctx.beginPath();
+        ctx.moveTo(mapX(0), mapY(0));
+        for (let x = 0; x <= maxF; x += 0.05) {
+          const y = fDensity(x);
+          ctx.lineTo(mapX(x), mapY(y));
+        }
+        ctx.strokeStyle = '#57606a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Linha do F Crítico (1.75)
+        const pxCrit = mapX(fCrit);
+        ctx.beginPath();
+        ctx.setLineDash([3, 3]);
+        ctx.strokeStyle = '#cf222e';
+        ctx.lineWidth = 1.5;
+        ctx.moveTo(pxCrit, padding.top);
+        ctx.lineTo(pxCrit, h - padding.bottom);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#cf222e';
+        ctx.font = '10px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`F crítico = ${fCrit}`, pxCrit, padding.top + 12);
+
+        // Linha do F Observado na Tese
+        const pxObs = mapX(Math.min(maxF - 0.2, m.f));
+        ctx.beginPath();
+        ctx.strokeStyle = '#1a7f37';
+        ctx.lineWidth = 2.5;
+        ctx.moveTo(pxObs, padding.top);
+        ctx.lineTo(pxObs, h - padding.bottom);
+        ctx.stroke();
+
+        ctx.fillStyle = '#1a7f37';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(`F observado = ${m.f.toFixed(3)}`, pxObs, padding.top + 28);
+
+        // Eixo X
+        ctx.beginPath();
+        ctx.strokeStyle = '#d0d7de';
+        ctx.lineWidth = 1;
+        ctx.moveTo(padding.left, h - padding.bottom);
+        ctx.lineTo(w - padding.right, h - padding.bottom);
+        ctx.stroke();
+
+        for (let i = 0; i <= 7; i++) {
+          const px = mapX(i);
+          ctx.fillStyle = '#8c959f';
+          ctx.font = '10px sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(i, px, h - padding.bottom + 14);
+        }
+
+        // Atualizar Dados Textuais
+        document.getElementById('fStatsText').innerHTML = 
+          `Modelo: <strong>${m.name}</strong> | $F = ${m.f.toFixed(3)}$ | $gl_1 = ${m.df1}$; $gl_2 = ${m.df2}$ | <strong>$p < 0{,}001$</strong>`;
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([document.getElementById('fStatsText')]);
+        }
+      };
+    });
+  </script>
+</body>
+</html>

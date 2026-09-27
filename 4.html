@@ -523,7 +523,7 @@
         <span class="header-badge">Módulo 4: Modelagem Multivariada e Equações Preditivas</span>
         <h1 style="margin-top: 10px;">Regressão Linear Múltipla: Parâmetros, Equações e Impacto Real</h1>
         <p style="color: var(--accent-navy); font-weight: 600; font-size: 1.05rem;">
-          Objetivo da Sessão Final: Capacitar a doutoranda para dominar cada coeficiente ($B$, $\beta$, $R^2$, $F$, $p$), entender o impacto isolado de cada preditor, interpretar o controle das variáveis sociodemográficas e defender com rigor as Tabelas 6 e 7 da tese.
+          Objetivo da Sessão Final: Capacitar a doutoranda para dominar a interpretação quantitativa de cada coeficiente ($B$, $\beta$, $R^2$, $p$), entender o impacto isolado de cada preditor, interpretar o controle das variáveis sociodemográficas e defender com rigor as Tabelas 6 e 7 da tese.
         </p>
       </div>
 
@@ -532,18 +532,18 @@
           <h3 style="color: var(--accent-navy);">O que Ensinar Hoje</h3>
           <ul style="font-size: 0.88rem;">
             <li>O funcionamento do método de entrada simultânea (Enter) no SPSS.</li>
-            <li>A diferença conceitual entre o coeficiente bruto ($B$) e o coeficiente padronizado ($\beta$).</li>
-            <li>O significado do $R^2$ e $R^2$ ajustado (quanto da variância é explicado).</li>
-            <li>A formulação exata das equações preditivas para cada um dos 4 domínios.</li>
-            <li>O significado das covariáveis qualitativas e o controle de variáveis de confusão.</li>
+            <li>A diferença prática entre o coeficiente bruto ($B$) e o coeficiente padronizado ($\beta$).</li>
+            <li>O significado real do $R^2$ (quanto da variância é explicado).</li>
+            <li>A interpretação exata do impacto unitário ("cada 1 ponto em $X$ gera $Y$ pontos no desfecho").</li>
+            <li>A interpretação das covariáveis de controle (idade, trabalho, renda, filhos).</li>
           </ul>
         </div>
 
         <div class="card card-accent-gold">
-          <h3 style="color: var(--accent-gold);">Frases de Impacto para a Vanna Dominar</h3>
+          <h3 style="color: var(--accent-gold);">Estrutura-Padrão de Resposta para a Vanna</h3>
           <p style="font-size: 0.86rem; color: var(--text-main); line-height: 1.5;">
             A aluna deve aprender a estruturar suas respostas com o padrão quantitativo rigoroso:
-            <br><em>"O acréscimo de <strong>1 ponto</strong> na escala de autoeficácia explica a elevação média de <strong>B pontos</strong> no domínio de qualidade de vida, <strong>mantidas fixas e controladas todas as demais características dos discentes</strong>."</em>
+            <br><em>"O acréscimo de <strong>1 unidade</strong> na escala de autoeficácia esteve associado à elevação média de <strong>B pontos</strong> no domínio de qualidade de vida, <strong>mantidas fixas e controladas todas as demais características dos discentes incluídas no modelo</strong>."</em>
           </p>
         </div>
 
@@ -598,20 +598,20 @@
 
       <div class="grid-2" style="margin-top: 16px;">
         <div class="card card-accent-green">
-          <h3 style="color: var(--accent-green); margin-top:0;">Coeficiente Não Padronizado ($B$)</h3>
+          <h3 style="color: var(--accent-green); margin-top:0;">Coeficiente Não Padronizado ($B$): O Impacto Prático Real</h3>
           <ul style="font-size: 0.9rem;">
             <li>Preserva a unidade métrica original das escalas.</li>
             <li>Indica quantos <strong>pontos reais na escala do WHOQOL (0 a 100)</strong> o aluno ganha ou perde para cada <strong>1 ponto a mais na escala de autoeficácia (1 a 10)</strong> ou a cada ano de vida.</li>
-            <li>Essencial para formular a <strong>equação preditiva</strong> e estimar escores na prática educacional.</li>
+            <li>Responde à pergunta: <em>"Na prática do estudante, quantos pontos de qualidade de vida a autoeficácia acrescenta?"</em></li>
           </ul>
         </div>
 
         <div class="card card-accent-purple">
-          <h3 style="color: var(--accent-purple); margin-top:0;">Coeficiente Padronizado ($\beta$ ou Beta)</h3>
+          <h3 style="color: var(--accent-purple); margin-top:0;">Coeficiente Padronizado ($\beta$ ou Beta): O Peso Relativo</h3>
           <ul style="font-size: 0.9rem;">
             <li>Elimina as unidades métricas, convertendo tudo para unidades de desvio-padrão ($\sigma$).</li>
             <li>Permite <strong>comparar diretamente qual preditor é mais influente</strong>, mesmo misturando idade (em anos), autoeficácia (de 1 a 10) e renda.</li>
-            <li>O preditor com maior $|\beta|$ é aquele com maior peso relativo no modelo.</li>
+            <li>Responde à pergunta: <em>"Entre todas as variáveis que entraram no modelo, quem mandou mais no resultado?"</em> O maior $|\beta|$ é o líder de influência.</li>
           </ul>
         </div>
       </div>
@@ -688,7 +688,7 @@
         Na primeira etapa das regressões, a tese inseriu o escore global de autoeficácia (TotalAE) juntamente com as 13 covariáveis sociodemográficas e ocupacionais para explicar cada um dos 4 domínios da qualidade de vida ($N = 193$).
       </p>
 
-      <table class="custom-table" style="font-size: 0.9rem;">
+      <table class="custom-table" style="font-size: 0.88rem;">
         <thead>
           <tr>
             <th>Domínio do WHOQOL</th>
@@ -699,6 +699,7 @@
             <th>$\beta$</th>
             <th>$p$-valor</th>
             <th>IC 95%</th>
+            <th>Interpretação Prática de Impacto</th>
           </tr>
         </thead>
         <tbody>
@@ -711,6 +712,7 @@
             <td>0,325</td>
             <td>< 0,001</td>
             <td>2,805 a 6,854</td>
+            <td>+1 ponto em TotalAE $\to$ <strong>+4,83 pontos</strong> em saúde física.</td>
           </tr>
           <tr>
             <td>Sexo</td>
@@ -718,6 +720,7 @@
             <td>0,154</td>
             <td>0,032</td>
             <td>0,428 a 9,573</td>
+            <td>Diferença média ajustada de 5 pontos entre categorias de sexo.</td>
           </tr>
           <tr>
             <td><strong>Psicológico</strong></td>
@@ -728,6 +731,7 @@
             <td style="color: var(--accent-green); font-weight:800;">0,403</td>
             <td>< 0,001</td>
             <td>4,303 a 8,657</td>
+            <td><strong>Maior impacto unitário e padronizado:</strong> +1 ponto $\to$ <strong>+6,48 pontos</strong> psicológicos.</td>
           </tr>
           <tr>
             <td rowspan="4"><strong>Relações Sociais</strong></td>
@@ -738,6 +742,7 @@
             <td>0,335</td>
             <td>< 0,001</td>
             <td>3,847 a 9,073</td>
+            <td>Autoeficácia impulsiona rede social (+6,46 pontos/unidade).</td>
           </tr>
           <tr>
             <td>Idade</td>
@@ -745,6 +750,7 @@
             <td>-0,247</td>
             <td>0,016</td>
             <td>-1,076 a -0,112</td>
+            <td>Cada ano de idade subtrai ~0,60 ponto das relações sociais.</td>
           </tr>
           <tr>
             <td>Estado Civil</td>
@@ -752,6 +758,7 @@
             <td>-0,253</td>
             <td>0,007</td>
             <td>-24,154 a -3,781</td>
+            <td>Forte deslocamento na avaliação relacional discente.</td>
           </tr>
           <tr>
             <td>Horas de Trabalho</td>
@@ -759,6 +766,7 @@
             <td>-0,155</td>
             <td>0,025</td>
             <td>-9,186 a -0,612</td>
+            <td>Cada nível de carga laboral retira ~4,90 pontos do convívio.</td>
           </tr>
           <tr>
             <td rowspan="2"><strong>Meio Ambiente</strong></td>
@@ -769,6 +777,7 @@
             <td>0,338</td>
             <td>< 0,001</td>
             <td>3,372 a 7,491</td>
+            <td>Autoeficácia agrega +5,43 pontos na percepção ambiental.</td>
           </tr>
           <tr>
             <td>Renda Familiar</td>
@@ -776,13 +785,14 @@
             <td>-0,141</td>
             <td>0,043</td>
             <td>-7,068 a -0,109</td>
+            <td>Efeito ajustado das faixas de renda sobre os recursos do ambiente.</td>
           </tr>
         </tbody>
       </table>
 
       <div class="audit-box audit-good">
-        <div class="audit-title">O Triunfo do Escore Global da Autoeficácia</div>
-        O escore TotalAE permaneceu estatisticamente significativo com $p < 0{,}001$ <strong>em todos os quatro domínios de qualidade de vida</strong>, mesmo na presença de 13 variáveis de controle. O maior peso padronizado ocorreu no <strong>Domínio Psicológico ($\beta = 0{,}403$)</strong>, provando que a autoconfiança formativa é o maior recurso protetivo da saúde psíquica na FDSM.
+        <div class="audit-title">O Significado Global para a Tese de Vanna</div>
+        O escore TotalAE permaneceu estatisticamente significativo com $p < 0{,}001$ <strong>em todos os quatro domínios de qualidade de vida</strong>, mesmo competindo com 13 covariáveis. O maior peso padronizado ocorreu no <strong>Domínio Psicológico ($\beta = 0{,}403$)</strong>, provando que a autoconfiança formativa é o maior recurso protetivo da saúde psíquica na FDSM.
       </div>
     </section>
 
@@ -790,56 +800,68 @@
     <section class="slide" data-slide="5">
       <h2>4. As Equações Preditivas Formais: Interpretando Unidade por Unidade</h2>
       <p>
-        A candidata deve memorizar e expressar as formulações empíricas exatas originadas da Tabela 6. Cada equação quantifica o ganho marginal direto no bem-estar dos discentes de Direito.
+        A candidata deve memorizar e expressar as formulações empíricas exatas originadas da Tabela 6. Veja a tradução detalhada de quanto cada fator influencia o desfecho:
       </p>
 
       <div class="grid-2">
         <div class="card card-accent-blue">
-          <h3 style="color: var(--accent-navy); margin-top:0;">Domínio Psicológico</h3>
+          <h3 style="color: var(--accent-navy); margin-top:0;">1. Domínio Psicológico</h3>
           <div class="formula-card" style="font-size: 0.95rem;">
             $$\hat{Y}_{\text{Psico}} = \beta_0 + 6{,}480 \cdot (\text{TotalAE})$$
           </div>
-          <p style="font-size: 0.92rem;">
-            <strong>A Frase Mandatória para a Banca:</strong><br>
-            <em>"O aumento de <strong>1 unidade</strong> no escore global de autoeficácia (em escala de 1 a 10) esteve associado ao acréscimo médio de <strong>6,480 pontos</strong> no escore do domínio psicológico (em escala de 0 a 100), mantidas constantes todas as variáveis sociodemográficas, acadêmicas e ocupacionais ($p < 0{,}001$)."</em>
+          <p style="font-size: 0.9rem;">
+            <strong>Interpretação Detalhada do Coeficiente:</strong><br>
+            Cada <strong>1 ponto</strong> a mais na autoeficácia global (de 1 a 10) produz um aumento de <strong>6,480 pontos</strong> na qualidade de vida psicológica (de 0 a 100).
           </p>
+          <div class="card" style="background: #ffffff; padding: 10px; margin-top: 8px; border-left: 3px solid var(--accent-navy);">
+            <strong style="color: var(--accent-navy);">Simulação Real de Impacto:</strong><br>
+            Um estudante com autoeficácia baixa (nota 5,0) versus um colega com autoeficácia alta (nota 8,0) apresenta uma diferença estimada de <strong>+19,44 pontos</strong> em saúde psicológica ($\Delta = 3 \times 6{,}480$), mantendo idênticos idade, sexo, turno e condições de trabalho. Nenhuma outra variável sociodemográfica teve força para competir com a autoeficácia neste domínio.
+          </div>
         </div>
 
         <div class="card card-accent-green">
-          <h3 style="color: var(--accent-green); margin-top:0;">Domínio Físico</h3>
+          <h3 style="color: var(--accent-green); margin-top:0;">2. Domínio Físico</h3>
           <div class="formula-card" style="font-size: 0.95rem;">
             $$\hat{Y}_{\text{Físico}} = \beta_0 + 4{,}829 \cdot (\text{TotalAE}) + 5{,}000 \cdot (\text{Sexo})$$
           </div>
-          <p style="font-size: 0.92rem;">
-            <strong>A Frase Mandatória para a Banca:</strong><br>
-            <em>"O aumento de <strong>1 unidade</strong> na autoeficácia global explica uma elevação média de <strong>4,829 pontos</strong> no domínio físico ($p < 0{,}001$). Adicionalmente, a transição de categoria de sexo respondeu por um deslocamento médio independente de <strong>5,000 pontos</strong> ($p = 0{,}032$)."</em>
+          <p style="font-size: 0.9rem;">
+            <strong>Interpretação Detalhada do Coeficiente:</strong><br>
+            O aumento de <strong>1 unidade</strong> na autoeficácia global explica uma elevação média de <strong>4,829 pontos</strong> na percepção física ($p < 0{,}001$).
           </p>
+          <div class="card" style="background: #ffffff; padding: 10px; margin-top: 8px; border-left: 3px solid var(--accent-green);">
+            <strong style="color: var(--accent-green);">Simulação Real de Impacto:</strong><br>
+            Um avanço de 2 pontos na escala de autoeficácia agrega quase 10 pontos (+9,66) em disposição diária, qualidade do sono e capacidade de trabalho. O sexo responde por um deslocamento paralelo independente de 5 pontos, mas a autoeficácia responde pelo dobro do peso relativo do modelo ($\beta = 0{,}325$ contra $\beta = 0{,}154$).
+          </div>
         </div>
       </div>
 
       <div class="grid-2" style="margin-top: 14px;">
         <div class="card card-accent-purple">
-          <h3 style="color: var(--accent-purple); margin-top:0;">Domínio Relações Sociais</h3>
+          <h3 style="color: var(--accent-purple); margin-top:0;">3. Domínio Relações Sociais</h3>
           <div class="formula-card" style="font-size: 0.88rem;">
             $$\hat{Y}_{\text{Sociais}} = \beta_0 + 6{,}460(\text{AE}) - 0{,}594(\text{Idade}) - 13{,}967(\text{Civil}) - 4{,}899(\text{Trab})$$
           </div>
           <p style="font-size: 0.9rem;">
-            <strong>Impacto Múltiplo Isolado:</strong>
-            <br>- Autoeficácia: $+1 \text{ ponto} \implies \mathbf{+6{,}460 \text{ pontos}}$ ($p < 0{,}001$).
-            <br>- Idade: $+1 \text{ ano de vida} \implies \mathbf{-0{,}594 \text{ pontos}}$ ($p = 0{,}016$).
-            <br>- Carga de Trabalho: $+1 \text{ nível ocupacional} \implies \mathbf{-4{,}899 \text{ pontos}}$ ($p = 0{,}025$).
+            <strong>Interpretação do Balanço de Forças:</strong>
           </p>
+          <ul style="font-size: 0.88rem; margin-left: 18px; margin-bottom: 8px;">
+            <li><strong>Autoeficácia (+6,460):</strong> É o motor positivo. Alunos que confiam em sua competência acadêmica mantêm redes sociais mais fortes.</li>
+            <li><strong>Idade (-0,594/ano):</strong> Cada década adicional de vida reduz em média <strong>5,94 pontos</strong> no escore de convívio social na graduação.</li>
+            <li><strong>Horas de Trabalho (-4,899):</strong> Cada aumento de categoria ocupacional retira ~4,9 pontos do suporte social e lazer discente.</li>
+          </ul>
         </div>
 
         <div class="card card-accent-gold">
-          <h3 style="color: var(--accent-gold); margin-top:0;">Domínio Meio Ambiente</h3>
+          <h3 style="color: var(--accent-gold); margin-top:0;">4. Domínio Meio Ambiente</h3>
           <div class="formula-card" style="font-size: 0.92rem;">
             $$\hat{Y}_{\text{Ambiente}} = \beta_0 + 5{,}432 \cdot (\text{TotalAE}) - 3{,}589 \cdot (\text{Renda})$$
           </div>
-          <p style="font-size: 0.92rem;">
-            <strong>O Modelo com Maior Explicação ($R^2 = 31{,}0\%$):</strong><br>
-            <em>"A autoeficácia global associou-se positivamente com acréscimo médio de <strong>5,432 pontos</strong> ($p < 0{,}001$). A renda familiar também figurou com coeficiente significativo de $-3{,}589$ pontos ($p = 0{,}043$)."</em>
+          <p style="font-size: 0.9rem;">
+            <strong>Interpretação do Modelo Mais Explicativo ($R^2 = 31{,}0\%$):</strong>
           </p>
+          <div class="card" style="background: #ffffff; padding: 10px; margin-top: 8px; border-left: 3px solid var(--accent-gold);">
+            A autoeficácia global possui impacto positivo robusto de <strong>+5,432 pontos por unidade</strong> ($p < 0{,}001, \beta = 0{,}338$). Alunos que se sentem academicamente competentes usufruem melhor dos recursos ambientais (espaços físicos, oportunidades de lazer, fontes de informação e transporte), superando inclusive a contribuição da renda familiar no modelo ($\beta = 0{,}338$ contra $\beta = -0{,}141$).
+          </div>
         </div>
       </div>
     </section>
@@ -848,7 +870,7 @@
     <section class="slide" data-slide="6">
       <h2>5. Os Modelos Dimensionais: A Matriz Ajustada da Tabela 7</h2>
       <p>
-        Na segunda etapa, o escore TotalAE foi substituído pelas <strong>5 dimensões fracionadas da autoeficácia</strong> inseridas em conjunto com as covariáveis ($18$ variáveis simultâneas, $N = 193$). A tabela revela o comportamento microdimensional:
+        Na segunda etapa, o escore TotalAE foi substituído pelas <strong>5 dimensões fracionadas da autoeficácia</strong> inseridas em conjunto com as covariáveis ($18$ variáveis simultâneas, $N = 193$). A tabela revela o comportamento microdimensional e como cada dimensão específica atua:
       </p>
 
       <table class="custom-table" style="font-size: 0.88rem;">
@@ -862,6 +884,7 @@
             <th>$\beta$</th>
             <th>$p$-valor</th>
             <th>IC 95%</th>
+            <th>Interpretação da Influência Específica</th>
           </tr>
         </thead>
         <tbody>
@@ -874,6 +897,7 @@
             <td>0,152</td>
             <td>0,034</td>
             <td>0,370 a 9,507</td>
+            <td rowspan="2">Nenhuma dimensão de autoeficácia manteve significância isolada; a variância foi partilhada entre as 5 dimensões.</td>
           </tr>
           <tr>
             <td>Presença de Filhos</td>
@@ -887,12 +911,13 @@
             <td>$F(18, 174) = 3{,}969$<br>$p < 0{,}001$</td>
             <td><strong>0,291</strong><br>(0,218)</td>
             <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">
-              Regulação da Formação (ARF)<br><small>Única Dimensão Significativa</small>
+              Regulação da Formação (ARF)<br><small>Líder Isolada de Impacto</small>
             </td>
             <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">+6,583</td>
             <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">0,485</td>
             <td style="background: #dafbe1; color: #1a7f37; font-weight:800;">< 0,001</td>
             <td>3,129 a 10,037</td>
+            <td><strong>Impacto extraordinário:</strong> cada 1 ponto em ARF agrega <strong>+6,58 pontos</strong> em saúde psicológica ($\beta = 0{,}485$).</td>
           </tr>
           <tr>
             <td rowspan="4"><strong>Relações Sociais</strong></td>
@@ -903,6 +928,7 @@
             <td>0,361</td>
             <td>0,003</td>
             <td>1,672 a 8,160</td>
+            <td>Proatividade expande redes de apoio: <strong>+4,92 pontos</strong> por unidade.</td>
           </tr>
           <tr>
             <td><strong>Gestão Acadêmica (AGA)</strong></td>
@@ -910,6 +936,7 @@
             <td>-0,223</td>
             <td>0,020</td>
             <td>-7,160 a -0,631</td>
+            <td>Sobrecarga de gestão retira tempo de convívio: <strong>-3,90 pontos</strong> por unidade.</td>
           </tr>
           <tr>
             <td>Estado Civil</td>
@@ -917,6 +944,7 @@
             <td>-0,276</td>
             <td>0,005</td>
             <td>-25,914 a -4,545</td>
+            <td rowspan="2">Condições familiares exercem forte peso de contraste nas redes de apoio social.</td>
           </tr>
           <tr>
             <td>Presença de Filhos</td>
@@ -934,6 +962,7 @@
             <td>0,317</td>
             <td>0,007</td>
             <td>3,986 a 24,408</td>
+            <td>No modelo dimensional, as covariáveis de perfil absorveram a significância isolada das dimensões.</td>
           </tr>
         </tbody>
       </table>
@@ -941,11 +970,11 @@
       <div class="grid-2" style="margin-top: 10px;">
         <div class="audit-box audit-good">
           <div class="audit-title">A Soberania da Regulação da Formação (ARF)</div>
-          No Domínio Psicológico, ARF obteve <strong>$\beta = 0{,}485$ ($B = 6{,}583; p < 0{,}001$)</strong>. Isso significa que ao controlar todas as outras 4 dimensões de autoeficácia e todas as 13 covariáveis, para cada 1 ponto na escala de ARF, o discente ganha <strong>6,58 pontos reais em saúde mental</strong>.
+          No Domínio Psicológico, ARF obteve <strong>$\beta = 0{,}485$ ($B = 6{,}583; p < 0{,}001$)</strong>. Isso significa que ao controlar todas as outras 4 dimensões de autoeficácia e todas as 13 covariáveis, para cada 1 ponto na escala de ARF, o discente ganha <strong>6,58 pontos reais em saúde mental</strong>. Saber planejar a carreira e estabelecer metas é o maior preditor de equilíbrio emocional.
         </div>
         <div class="audit-box audit-bad">
           <div class="audit-title">O que Ocorreu nos Domínios Físico e Meio Ambiente?</div>
-          Nenhuma das 5 dimensões isoladas manteve $p < 0{,}05$. Por quê? Porque as dimensões compartilham forte correlação entre si. Quando colocadas simultaneamente, <strong>a variância é fragmentada</strong> e nenhuma dimensão isolada consegue reivindicar o efeito sozinha.
+          Nenhuma das 5 dimensões isoladas manteve $p < 0{,}05$. Por quê? Porque as dimensões compartilham forte correlação entre si. Quando colocadas simultaneamente, <strong>a variância é fragmentada</strong> e nenhuma dimensão isolada consegue reivindicar o efeito sozinha. O efeito total existe (como provado na Tabela 6), mas é sistêmico.
         </div>
       </div>
     </section>

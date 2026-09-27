@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Gráfico de Momentos Amostrais e Ausência de Normalidade</title>
+
+  <!-- Configuração MathJax 3 -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #f4f6f9;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --border-subtle: #d0d7de;
+      --border-strong: #8c959f;
+      --text-main: #1f2328;
+      --text-muted: #57606a;
+      --accent-navy: #0969da;
+      --accent-navy-dark: #054da7;
+      --accent-gold: #9a6700;
+      --accent-gold-bg: #fff8c5;
+      --accent-green: #1a7f37;
+      --accent-green-bg: #dafbe1;
+      --accent-red: #cf222e;
+      --accent-purple: #8250df;
+      --accent-purple-bg: #fbefff;
+      --shadow-elevation: 0 4px 16px rgba(140, 149, 159, 0.15);
+      --shadow-card: 0 1px 4px rgba(140, 149, 159, 0.1);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.55;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 1360px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .panel-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px 28px;
+      box-shadow: var(--shadow-card);
+    }
+
+    h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-navy);
+      margin-bottom: 14px;
+      border-bottom: 2px solid #eaeef2;
+      padding-bottom: 6px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #24292f;
+      margin: 14px 0 8px 0;
+    }
+
+    p {
+      color: var(--text-main);
+      font-size: 0.98rem;
+      margin-bottom: 10px;
+      text-align: justify;
+    }
+
+    .grid-app {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 1080px) {
+      .grid-app {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 12px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    @media (max-width: 860px) {
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .control-card {
+      background-color: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .control-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-navy-dark);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eaeef2;
+      padding-bottom: 6px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #333d47;
+      margin-bottom: 4px;
+    }
+
+    .form-control-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      background: #e1e4e8;
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="number"], select {
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="number"]:focus, select:focus {
+      border-color: var(--accent-navy);
+      background: #ffffff;
+    }
+
+    select {
+      width: 100%;
+    }
+
+    .checkbox-layer {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 10px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      background: #fdfdfe;
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .checkbox-layer:hover {
+      background: #f1f5f9;
+      border-color: var(--border-subtle);
+    }
+
+    .checkbox-layer input[type="checkbox"] {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent-navy);
+    }
+
+    .layer-label {
+      flex: 1;
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: #24292f;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .color-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(0,0,0,0.15);
+    }
+
+    .canvas-wrapper {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 18px 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .scale-selector-group {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-scale {
+      background: #f6f8fa;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-scale:hover {
+      background: #eaeef2;
+      border-color: var(--border-strong);
+    }
+
+    .btn-scale.active {
+      background: var(--accent-navy);
+      border-color: var(--accent-navy-dark);
+      color: #ffffff;
+    }
+
+    #chartCanvas {
+      width: 100%;
+      height: 480px;
+      border: 1px solid #e1e4e8;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: crosshair;
+    }
+
+    .canvas-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    .metric-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    .formula-card {
+      background: #f8fafc;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 10px 14px;
+      text-align: center;
+      margin: 10px 0;
+      font-size: 1.05rem;
+      color: var(--accent-navy);
+    }
+
+    .audit-box {
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-top: 10px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .audit-box-title {
+      font-weight: 800;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .audit-good {
+      background: var(--accent-green-bg);
+      border-left: 4px solid var(--accent-green);
+      color: #0f5128;
+    }
+
+    .audit-bad {
+      background: #ffebe9;
+      border-left: 4px solid var(--accent-red);
+      color: #82071e;
+    }
+
+    .audit-improve {
+      background: var(--accent-gold-bg);
+      border-left: 4px solid var(--accent-gold);
+      color: #533f03;
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+      background-color: #ffffff;
+    }
+
+    table.custom-table th, 
+    table.custom-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border: 1px solid var(--border-subtle);
+    }
+
+    table.custom-table th {
+      background-color: #f1f5f9;
+      color: var(--accent-navy-dark);
+      font-weight: 700;
+    }
+
+    table.custom-table tr:nth-child(even) {
+      background-color: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-container">
+
+  <div class="panel-box">
+    <h1>Laboratório Gráfico de Parâmetros e Ausência de Normalidade</h1>
+    <p style="font-size: 1.02rem; color: var(--accent-navy-dark); font-weight: 600;">
+      Ferramenta de treinamento para a defesa de tese: visualize como cada indicador numérico (Média, Mediana, Desvio-Padrão, Assimetria e Curtose) altera a morfologia da curva contínua e compreenda graficamente por que os dados da Faculdade de Direito do Sul de Minas (FDSM) violaram os testes de aderência à normalidade teórica.
+    </p>
+    <div class="grid-3" style="margin-top: 10px;">
+      <div class="metric-badge" style="background: #f0f7ff; border-color: #c8e1ff; color: var(--accent-navy);">
+        <span>Escala 1: Likert de 1 a 5 (WHOQOL Bruto)</span>
+      </div>
+      <div class="metric-badge" style="background: #fffdf5; border-color: #fae17d; color: var(--accent-gold);">
+        <span>Escala 2: Likert de 1 a 10 (Autoeficácia Discente)</span>
+      </div>
+      <div class="metric-badge" style="background: #f6fdf7; border-color: #a7f3d0; color: var(--accent-green);">
+        <span>Escala 3: Normalizada de 0 a 100 (WHOQOL Escore Final)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-app">
+
+    <div>
+
+      <div class="control-card" style="border-top: 4px solid var(--accent-navy);">
+        <div class="control-card-title">
+          <span>Cenários da Tese (Tabela 2, 3 e 4)</span>
+        </div>
+        <div class="form-group">
+          <label for="selectPreset">Carregar Variável Real da Tese:</label>
+          <select id="selectPreset" onchange="loadPreset(this.value)">
+            <option value="custom">-- Modo Personalizado (Ajuste Livre) --</option>
+            <optgroup label="Autoeficácia na Formação Superior (Escala 1 a 10)">
+              <option value="aga" selected>AGA - Gestão Acadêmica (M=7.45 | Md=8.00 | DP=1.16 | Sk=-1.59 | Ku=2.25)</option>
+              <option value="aa">AA - Autoeficácia Acadêmica (M=7.37 | Md=7.66 | DP=1.08 | Sk=-1.40 | Ku=2.05)</option>
+              <option value="arf">ARF - Regulação da Formação (M=7.26 | Md=7.57 | DP=1.25 | Sk=-1.51 | Ku=2.26)</option>
+              <option value="ais">AIS - Interação Social (M=7.17 | Md=7.57 | DP=1.17 | Sk=-1.18 | Ku=1.51)</option>
+              <option value="aap">AAP - Ações Proativas (M=6.87 | Md=7.28 | DP=1.49 | Sk=-1.16 | Ku=1.39)</option>
+              <option value="totalae">TotalAE - Escore Global (M=7.22 | Md=7.32 | DP=1.05 | Sk=-1.20 | Ku=1.70)</option>
+            </optgroup>
+            <optgroup label="Qualidade de Vida - WHOQOL-bref (Escala 0 a 100)">
+              <option value="qol_amb">Meio Ambiente (M=69.45 | Md=71.80 | DP=16.91 | Sk=-0.46 | Ku=-0.04)</option>
+              <option value="qol_soc">Relações Sociais (M=67.49 | Md=66.60 | DP=20.30 | Sk=-0.45 | Ku=-0.11)</option>
+              <option value="qol_fis">Domínio Físico (M=66.71 | Md=67.80 | DP=15.63 | Sk=-0.45 | Ku=0.09)</option>
+              <option value="qol_psi">Domínio Psicológico (M=63.04 | Md=62.50 | DP=16.95 | Sk=-0.33 | Ku=-0.23)</option>
+            </optgroup>
+          </select>
+        </div>
+      </div>
+
+      <div class="control-card">
+        <div class="control-card-title">
+          <span>Parâmetros Estatísticos</span>
+          <span style="font-size: 0.75rem; background: #e1e4e8; padding: 2px 6px; border-radius: 4px; color: #24292f;">Sincronizado</span>
+        </div>
+
+        <div class="form-group">
+          <label for="paramMean">Média Aritmética ($\bar{X}$):</label>
+          <div class="form-control-row">
+            <input type="range" id="sliderMean" min="1" max="10" step="0.05" value="7.45" oninput="syncFromSlider('mean', this.value)">
+            <input type="number" id="paramMean" value="7.45" step="0.01" style="width: 85px;" oninput="syncFromInput('mean', this.value)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paramSD">Desvio-Padrão ($s$ ou $DP$):</label>
+          <div class="form-control-row">
+            <input type="range" id="sliderSD" min="0.1" max="3.5" step="0.05" value="1.16" oninput="syncFromSlider('sd', this.value)">
+            <input type="number" id="paramSD" value="1.16" step="0.01" min="0.05" style="width: 85px;" oninput="syncFromInput('sd', this.value)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paramSkew">Assimetria (Skewness):</label>
+          <div class="form-control-row">
+            <input type="range" id="sliderSkew" min="-3.0" max="3.0" step="0.05" value="-1.59" oninput="syncFromSlider('skew', this.value)">
+            <input type="number" id="paramSkew" value="-1.59" step="0.01" style="width: 85px;" oninput="syncFromInput('skew', this.value)">
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            <span>Esquerda (Negativa)</span>
+            <span>0 (Simétrica)</span>
+            <span>Direita (Positiva)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="paramKurt">Curtose (Kurtosis Excedente):</label>
+          <div class="form-control-row">
+            <input type="range" id="sliderKurt" min="-1.5" max="5.0" step="0.05" value="2.25" oninput="syncFromSlider('kurt', this.value)">
+            <input type="number" id="paramKurt" value="2.25" step="0.01" style="width: 85px;" oninput="syncFromInput('kurt', this.value)">
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+            <span>Platicúrtica (< 0)</span>
+            <span>0 (Mesocúrtica)</span>
+            <span>Leptocúrtica (> 0)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-card">
+        <div class="control-card-title">
+          <span>Camadas Gráficas para Adicionar</span>
+        </div>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkNormal" checked onchange="renderChart()">
+          <span class="layer-label">
+            Curva Gaussiana Ideal Teórica (Simétrica)
+            <span class="color-swatch" style="background: #94a3b8;"></span>
+          </span>
+        </label>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkEmpirical" checked onchange="renderChart()">
+          <span class="layer-label">
+            Curva Empírica Ajustada (Assimetria/Curtose)
+            <span class="color-swatch" style="background: #0969da;"></span>
+          </span>
+        </label>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkMean" checked onchange="renderChart()">
+          <span class="layer-label">
+            Média Aritmética ($\bar{X}$)
+            <span class="color-swatch" style="background: #cf222e;"></span>
+          </span>
+        </label>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkMedian" checked onchange="renderChart()">
+          <span class="layer-label">
+            Mediana Calculada ($Md$)
+            <span class="color-swatch" style="background: #9a6700;"></span>
+          </span>
+        </label>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkKurtosis" checked onchange="renderChart()">
+          <span class="layer-label">
+            Indicador Gráfico de Curtose (Pico vs. Mesocúrtica)
+            <span class="color-swatch" style="background: #8250df;"></span>
+          </span>
+        </label>
+
+        <label class="checkbox-layer">
+          <input type="checkbox" id="chkSD" checked onchange="renderChart()">
+          <span class="layer-label">
+            Faixa de Dispersão ($\pm 1\,DP$ e $\pm 2\,DP$)
+            <span class="color-swatch" style="background: rgba(26, 127, 55, 0.25);"></span>
+          </span>
+        </label>
+      </div>
+
+    </div>
+
+    <div class="canvas-wrapper">
+
+      <div class="canvas-toolbar">
+        <div class="scale-selector-group">
+          <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-right: 6px;">Escala da Régua:</span>
+          <button class="btn-scale" id="btnScale5" onclick="changeScale(5)">Escala 1 a 5 (Likert Bruta)</button>
+          <button class="btn-scale active" id="btnScale10" onclick="changeScale(10)">Escala 1 a 10 (Autoeficácia)</button>
+          <button class="btn-scale" id="btnScale100" onclick="changeScale(100)">Escala 0 a 100 (WHOQOL-bref)</button>
+        </div>
+        <div>
+          <span id="currentStatusBadge" class="metric-badge" style="background: #dafbe1; color: #1a7f37; border-color: #a7f3d0;">
+            Modelo: Gestão Acadêmica (AGA)
+          </span>
+        </div>
+      </div>
+
+      <canvas id="chartCanvas" width="920" height="480"></canvas>
+
+      <div class="canvas-hint">
+        Interatividade em tempo real: arraste horizontalmente sobre o gráfico para deslocar a média aritmétrica ou altere os controles.
+      </div>
+
+      <div class="grid-4" style="margin-top: 16px;">
+        <div class="panel-box" style="padding: 12px 16px; background: #fdfdfe;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Média Aritmética</div>
+          <div id="statBoxMean" style="font-size: 1.45rem; font-weight: 800; color: #cf222e;">7.45</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Centro de Massa</div>
+        </div>
+
+        <div class="panel-box" style="padding: 12px 16px; background: #fdfdfe;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Mediana Calculada</div>
+          <div id="statBoxMedian" style="font-size: 1.45rem; font-weight: 800; color: #9a6700;">8.00</div>
+          <div id="statBoxDiff" style="font-size: 0.75rem; color: var(--accent-red); font-weight: 700;">Divergência: +0.55 da média</div>
+        </div>
+
+        <div class="panel-box" style="padding: 12px 16px; background: #fdfdfe;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Coeficiente de Variação</div>
+          <div id="statBoxCV" style="font-size: 1.45rem; font-weight: 800; color: #1a7f37;">15.57%</div>
+          <div id="statBoxHomog" style="font-size: 0.75rem; color: var(--text-muted);">Dispersão Moderada / Homogênea</div>
+        </div>
+
+        <div class="panel-box" style="padding: 12px 16px; background: #fdfdfe;">
+          <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Diagnóstico da Forma</div>
+          <div id="statBoxShape" style="font-size: 1.05rem; font-weight: 800; color: var(--accent-navy); margin-top: 4px;">Assimetria Severa</div>
+          <div id="statBoxShapeSub" style="font-size: 0.75rem; color: var(--text-muted);">Leptocúrtica Acentuada</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="panel-box">
+    <h2>O Fundamento Psicométrico: Por Que as Dispersões Afastam a Normalidade?</h2>
+
+    <div class="grid-2">
+      <div>
+        <h3>1. O Conflito Matemático entre Desvio-Padrão e Limite de Escala</h3>
+        <p>
+          Na distribuição normal teórica pura, a variável estende-se de $-\infty$ a $+\infty$. Entretanto, instrumentos psicométricos operam com <strong>limites físicos estritos</strong> (piso e teto).
+        </p>
+        <p>
+          Considere a <strong>Autoeficácia na Gestão Acadêmica (AGA)</strong> observada na tese:
+        </p>
+        <div class="formula-card">
+          $$\text{Média} = 7{,}45 \qquad \text{e} \qquad \text{DP} = 1{,}16$$
+        </div>
+        <p>
+          Sob o modelo gaussiano simétrico, a faixa de dois desvios-padrão à direita exigiria alcance até:
+        </p>
+        <div class="formula-card">
+          $$\mu + 2\sigma = 7{,}45 + 2(1{,}16) = \mathbf{9{,}77}$$
+        </div>
+        <p>
+          Como a escala máxima observada é <strong>9,00</strong> (e o limite absoluto do formulário é 10), ocorre um acúmulo artificial de respondentes na extremidade superior (efeito teto). A curva é impedida de decrescer simetricamente à direita.
+        </p>
+      </div>
+
+      <div>
+        <h3>2. A Relação Geométrica entre Assimetria, Curtose e Mediana</h3>
+        <p>
+          Para reter a variância amostral ($DP = 1{,}16$) diante da contenção no topo, a cauda esquerda se estende, resultando em <strong>assimetria negativa</strong> ($\text{Skewness} = -1{,}592$).
+        </p>
+        <p>
+          Simultaneamente, a concentração de discentes ao redor de valores elevados produz elevação excessiva do ápice e afinamento das caudas intermediárias, caracterizando <strong>curtose leptocúrtica</strong> ($\text{Kurtosis} = 2{,}253 > 0$).
+        </p>
+        <div class="formula-card">
+          $$\text{Mediana} \approx \bar{X} - \frac{\text{Skewness} \times s}{3}$$
+        </div>
+        <p>
+          Com assimetria negativa, a mediana ($8{,}00$) posiciona-se à direita da média ($7{,}45$). Apresentar apenas a média mascara a realidade de que mais de 50% dos discentes pontuam na faixa mais alta da escala.
+        </p>
+        <div class="audit-box audit-improve">
+          <div class="audit-box-title">Defesa Estratégica na Banca Examinadora</div>
+          <em>"A violação dos testes de Kolmogorov-Smirnov e Shapiro-Wilk decorre do teto psicométrico e da homogeneidade positiva dos estudantes em gestão de prazos, não de imperfeição de coleta. Por isso, a mediana constitui medida fidedigna de centralidade e o teste não paramétrico de Spearman foi metodologicamente mandatório."</em>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 24px;">Matriz Completa de Momentos Amostrais da Tese (Tabelas 2, 3 e 4)</h3>
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Variável Investigada</th>
+          <th>Escala</th>
+          <th>Mín - Máx</th>
+          <th>Média ($\bar{X}$)</th>
+          <th>Mediana ($Md$)</th>
+          <th>Desvio-Padrão ($DP$)</th>
+          <th>Assimetria</th>
+          <th>Curtose</th>
+          <th>Diagnóstico de Aderência</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Autoeficácia na Gestão Acadêmica (AGA)</strong></td>
+          <td>1 a 10</td>
+          <td>3,00 - 9,00</td>
+          <td>7,45</td>
+          <td>8,00</td>
+          <td>1,16</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,592</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">2,253</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Autoeficácia na Regulação da Formação (ARF)</strong></td>
+          <td>1 a 10</td>
+          <td>2,86 - 9,00</td>
+          <td>7,26</td>
+          <td>7,57</td>
+          <td>1,25</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,510</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">2,263</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Autoeficácia Acadêmica (AA)</strong></td>
+          <td>1 a 10</td>
+          <td>3,22 - 9,00</td>
+          <td>7,37</td>
+          <td>7,66</td>
+          <td>1,08</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,398</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">2,055</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Autoeficácia na Interação Social (AIS)</strong></td>
+          <td>1 a 10</td>
+          <td>2,14 - 9,00</td>
+          <td>7,17</td>
+          <td>7,57</td>
+          <td>1,17</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,180</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">1,509</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Autoeficácia em Ações Proativas (AAP)</strong></td>
+          <td>1 a 10</td>
+          <td>1,14 - 9,00</td>
+          <td>6,87</td>
+          <td>7,28</td>
+          <td>1,49</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,162</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">1,388</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Escore Global de Autoeficácia (TotalAE)</strong></td>
+          <td>1 a 10</td>
+          <td>3,88 - 8,79</td>
+          <td>7,22</td>
+          <td>7,32</td>
+          <td>1,05</td>
+          <td style="color: var(--accent-red); font-weight: 700;">-1,200</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">1,700</td>
+          <td>Rejeita Normalidade ($p < 0{,}001$)</td>
+        </tr>
+        <tr>
+          <td><strong>Domínio Meio Ambiente (WHOQOL)</strong></td>
+          <td>0 a 100</td>
+          <td>18,75 - 100,0</td>
+          <td>69,45</td>
+          <td>71,80</td>
+          <td>16,91</td>
+          <td style="color: var(--accent-navy); font-weight: 700;">-0,462</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">-0,041</td>
+          <td>Rejeita Normalidade ($p < 0{,}05$)</td>
+        </tr>
+        <tr>
+          <td><strong>Domínio Relações Sociais (WHOQOL)</strong></td>
+          <td>0 a 100</td>
+          <td>8,33 - 100,0</td>
+          <td>67,49</td>
+          <td>66,60</td>
+          <td>20,30</td>
+          <td style="color: var(--accent-navy); font-weight: 700;">-0,446</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">-0,111</td>
+          <td>Rejeita Normalidade ($p < 0{,}05$)</td>
+        </tr>
+        <tr>
+          <td><strong>Domínio Físico (WHOQOL)</strong></td>
+          <td>0 a 100</td>
+          <td>17,86 - 100,0</td>
+          <td>66,71</td>
+          <td>67,80</td>
+          <td>15,63</td>
+          <td style="color: var(--accent-navy); font-weight: 700;">-0,449</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">0,092</td>
+          <td>Rejeita Normalidade ($p < 0{,}05$)</td>
+        </tr>
+        <tr>
+          <td><strong>Domínio Psicológico (WHOQOL)</strong></td>
+          <td>0 a 100</td>
+          <td>16,67 - 100,0</td>
+          <td>63,04</td>
+          <td>62,50</td>
+          <td>16,95</td>
+          <td style="color: var(--accent-navy); font-weight: 700;">-0,326</td>
+          <td style="color: var(--accent-purple); font-weight: 700;">-0,235</td>
+          <td>Rejeita Normalidade ($p < 0{,}05$)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-2" style="margin-top: 14px;">
+      <div class="audit-box audit-good">
+        <div class="audit-box-title">Convergência Descritiva Psicométrica</div>
+        O simulador evidencia com precisão visual que a Autoeficácia Discente manifesta acentuada leptocurtose e assimetria negativa, enquanto os domínios do WHOQOL-bref apresentam morfologia mesocúrtica mais equilibrada, justificando a análise discriminada entre construtos.
+      </div>
+      <div class="audit-box audit-bad">
+        <div class="audit-box-title">Risco Metodológico de Omissão da Mediana</div>
+        Se a doutoranda reportasse unicamente as médias aritméticas, a banca examinadora seria induzida a crer em distribuições gaussianas com dispersão simétrica. A apresentação simultânea de média, mediana e desvio-padrão valida a escolha de testes não paramétricos.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const PRESETS = {
+    aga: { name: 'Gestão Acadêmica (AGA)', scale: 10, mean: 7.45, sd: 1.16, skew: -1.592, kurt: 2.253, actualMed: 8.00 },
+    aa: { name: 'Autoeficácia Acadêmica (AA)', scale: 10, mean: 7.37, sd: 1.08, skew: -1.398, kurt: 2.055, actualMed: 7.66 },
+    arf: { name: 'Regulação da Formação (ARF)', scale: 10, mean: 7.26, sd: 1.25, skew: -1.510, kurt: 2.263, actualMed: 7.57 },
+    ais: { name: 'Interação Social (AIS)', scale: 10, mean: 7.17, sd: 1.17, skew: -1.180, kurt: 1.509, actualMed: 7.57 },
+    aap: { name: 'Ações Proativas (AAP)', scale: 10, mean: 6.87, sd: 1.49, skew: -1.162, kurt: 1.388, actualMed: 7.28 },
+    totalae: { name: 'Escore Global (TotalAE)', scale: 10, mean: 7.22, sd: 1.05, skew: -1.200, kurt: 1.700, actualMed: 7.32 },
+    qol_amb: { name: 'Meio Ambiente (WHOQOL)', scale: 100, mean: 69.45, sd: 16.91, skew: -0.462, kurt: -0.041, actualMed: 71.80 },
+    qol_soc: { name: 'Relações Sociais (WHOQOL)', scale: 100, mean: 67.49, sd: 20.30, skew: -0.446, kurt: -0.111, actualMed: 66.60 },
+    qol_fis: { name: 'Domínio Físico (WHOQOL)', scale: 100, mean: 66.71, sd: 15.63, skew: -0.449, kurt: 0.092, actualMed: 67.80 },
+    qol_psi: { name: 'Domínio Psicológico (WHOQOL)', scale: 100, mean: 63.04, sd: 16.95, skew: -0.326, kurt: -0.235, actualMed: 62.50 }
+  };
+
+  let currentScale = 10;
+  let minVal = 1;
+  let maxVal = 10;
+  let isDragging = false;
+
+  let stats = {
+    mean: 7.45,
+    sd: 1.16,
+    skew: -1.59,
+    kurt: 2.25,
+    median: 8.00
+  };
+
+  function configureScaleBounds(scaleType) {
+    currentScale = scaleType;
+    if (scaleType === 5) {
+      minVal = 1; maxVal = 5;
+    } else if (scaleType === 10) {
+      minVal = 1; maxVal = 10;
+    } else if (scaleType === 100) {
+      minVal = 0; maxVal = 100;
+    }
+
+    const sMean = document.getElementById('sliderMean');
+    const pMean = document.getElementById('paramMean');
+    const sSD = document.getElementById('sliderSD');
+    const pSD = document.getElementById('paramSD');
+
+    sMean.min = minVal;
+    sMean.max = maxVal;
+    sMean.step = scaleType === 100 ? '0.5' : '0.05';
+    pMean.step = scaleType === 100 ? '0.1' : '0.01';
+
+    sSD.min = scaleType === 100 ? '1' : '0.1';
+    sSD.max = scaleType === 100 ? '35' : (scaleType === 5 ? '1.8' : '3.5');
+    sSD.step = scaleType === 100 ? '0.5' : '0.05';
+    pSD.step = scaleType === 100 ? '0.1' : '0.01';
+
+    document.querySelectorAll('.btn-scale').forEach(b => b.classList.remove('active'));
+    if (scaleType === 5) document.getElementById('btnScale5').classList.add('active');
+    if (scaleType === 10) document.getElementById('btnScale10').classList.add('active');
+    if (scaleType === 100) document.getElementById('btnScale100').classList.add('active');
+  }
+
+  function changeScale(newScale) {
+    if (newScale === currentScale) return;
+    const ratio = (newScale === 100) ? (100 / currentScale) : (newScale / currentScale);
+
+    configureScaleBounds(newScale);
+
+    stats.mean = Math.max(minVal, Math.min(maxVal, stats.mean * ratio));
+    stats.sd = Math.max(0.1, stats.sd * ratio);
+
+    document.getElementById('selectPreset').value = 'custom';
+    document.getElementById('currentStatusBadge').textContent = 'Modelo: Personalizado (Escala ' + minVal + ' a ' + maxVal + ')';
+    document.getElementById('currentStatusBadge').style.background = '#f1f5f9';
+    document.getElementById('currentStatusBadge').style.color = '#334155';
+
+    updateAllInputsFromStats();
+    recalculateDependencies('scale');
+  }
+
+  function loadPreset(key) {
+    if (key === 'custom') {
+      document.getElementById('currentStatusBadge').textContent = 'Modelo: Personalizado';
+      document.getElementById('currentStatusBadge').style.background = '#f1f5f9';
+      document.getElementById('currentStatusBadge').style.color = '#334155';
+      return;
+    }
+
+    const p = PRESETS[key];
+    if (!p) return;
+
+    configureScaleBounds(p.scale);
+
+    stats.mean = p.mean;
+    stats.sd = p.sd;
+    stats.skew = p.skew;
+    stats.kurt = p.kurt;
+    stats.median = p.actualMed;
+
+    document.getElementById('currentStatusBadge').textContent = 'Modelo: ' + p.name;
+    document.getElementById('currentStatusBadge').style.background = '#dafbe1';
+    document.getElementById('currentStatusBadge').style.color = '#1a7f37';
+
+    updateAllInputsFromStats();
+    updateDerivedIndicators();
+    renderChart();
+  }
+
+  function syncFromSlider(param, val) {
+    val = parseFloat(val);
+    if (param === 'mean') stats.mean = val;
+    if (param === 'sd') stats.sd = val;
+    if (param === 'skew') stats.skew = val;
+    if (param === 'kurt') stats.kurt = val;
+
+    syncTextInputs();
+    recalculateDependencies(param);
+  }
+
+  function syncFromInput(param, val) {
+    val = parseFloat(val);
+    if (isNaN(val)) return;
+
+    if (param === 'mean') stats.mean = Math.max(minVal, Math.min(maxVal, val));
+    if (param === 'sd') stats.sd = Math.max(0.05, val);
+    if (param === 'skew') stats.skew = Math.max(-3.0, Math.min(3.0, val));
+    if (param === 'kurt') stats.kurt = Math.max(-1.5, Math.min(5.0, val));
+
+    syncSliders();
+    recalculateDependencies(param);
+  }
+
+  function syncTextInputs() {
+    document.getElementById('paramMean').value = stats.mean.toFixed(2);
+    document.getElementById('paramSD').value = stats.sd.toFixed(2);
+    document.getElementById('paramSkew').value = stats.skew.toFixed(2);
+    document.getElementById('paramKurt').value = stats.kurt.toFixed(2);
+  }
+
+  function syncSliders() {
+    document.getElementById('sliderMean').value = stats.mean;
+    document.getElementById('sliderSD').value = stats.sd;
+    document.getElementById('sliderSkew').value = stats.skew;
+    document.getElementById('sliderKurt').value = stats.kurt;
+  }
+
+  function updateAllInputsFromStats() {
+    syncTextInputs();
+    syncSliders();
+  }
+
+  function recalculateDependencies(changedTrigger) {
+    const range = maxVal - minVal;
+
+    const distToMax = maxVal - stats.mean;
+    const distToMin = stats.mean - minVal;
+
+    const maxPermissibleSD = Math.min(range * 0.4, Math.max(0.15, Math.min(distToMax, distToMin) * 1.8 + range * 0.08));
+    if (stats.sd > maxPermissibleSD && changedTrigger !== 'sd') {
+      stats.sd = maxPermissibleSD;
+      document.getElementById('paramSD').value = stats.sd.toFixed(2);
+      document.getElementById('sliderSD').value = stats.sd;
+    }
+
+    const minViableKurtosis = Math.max(-1.4, (stats.skew * stats.skew) * 0.35 - 1.2);
+    if (stats.kurt < minViableKurtosis) {
+      stats.kurt = minViableKurtosis;
+      document.getElementById('paramKurt').value = stats.kurt.toFixed(2);
+      document.getElementById('sliderKurt').value = stats.kurt;
+    }
+
+    let computedMed = stats.mean - (stats.skew * stats.sd) / 3.0;
+    computedMed = Math.max(minVal + 0.05, Math.min(maxVal - 0.05, computedMed));
+    stats.median = computedMed;
+
+    updateDerivedIndicators();
+    renderChart();
+  }
+
+  function updateDerivedIndicators() {
+    document.getElementById('statBoxMean').textContent = stats.mean.toFixed(2);
+    document.getElementById('statBoxMedian').textContent = stats.median.toFixed(2);
+
+    const diff = stats.median - stats.mean;
+    const diffElem = document.getElementById('statBoxDiff');
+    if (Math.abs(diff) < 0.02) {
+      diffElem.textContent = 'Simétrica: Mediana ≈ Média';
+      diffElem.style.color = 'var(--text-muted)';
+    } else if (diff > 0) {
+      diffElem.textContent = 'Divergência: +' + diff.toFixed(2) + ' acima da média';
+      diffElem.style.color = 'var(--accent-red)';
+    } else {
+      diffElem.textContent = 'Divergência: ' + diff.toFixed(2) + ' abaixo da média';
+      diffElem.style.color = 'var(--accent-navy)';
+    }
+
+    const cv = (stats.sd / stats.mean) * 100;
+    document.getElementById('statBoxCV').textContent = cv.toFixed(2) + '%';
+
+    const homogElem = document.getElementById('statBoxHomog');
+    if (cv < 15) homogElem.textContent = 'Alta Homogeneidade (<15%)';
+    else if (cv <= 30) homogElem.textContent = 'Dispersão Média / Moderada (15-30%)';
+    else homogElem.textContent = 'Alta Heterogeneidade (>30%)';
+
+    const shapeElem = document.getElementById('statBoxShape');
+    const shapeSub = document.getElementById('statBoxShapeSub');
+
+    if (Math.abs(stats.skew) < 0.25) {
+      shapeElem.textContent = 'Aproximadamente Simétrica';
+      shapeElem.style.color = 'var(--accent-green)';
+    } else if (stats.skew <= -1.0) {
+      shapeElem.textContent = 'Assimetria Negativa Severa';
+      shapeElem.style.color = 'var(--accent-red)';
+    } else if (stats.skew < -0.25) {
+      shapeElem.textContent = 'Assimetria Negativa Moderada';
+      shapeElem.style.color = 'var(--accent-gold)';
+    } else if (stats.skew >= 1.0) {
+      shapeElem.textContent = 'Assimetria Positiva Severa';
+      shapeElem.style.color = 'var(--accent-red)';
+    } else {
+      shapeElem.textContent = 'Assimetria Positiva Moderada';
+      shapeElem.style.color = 'var(--accent-gold)';
+    }
+
+    if (Math.abs(stats.kurt) < 0.25) {
+      shapeSub.textContent = 'Mesocúrtica (Gaussiana)';
+    } else if (stats.kurt > 0.25) {
+      shapeSub.textContent = 'Leptocúrtica (Pico Excessivo +' + stats.kurt.toFixed(2) + ')';
+    } else {
+      shapeSub.textContent = 'Platicúrtica (Achatada ' + stats.kurt.toFixed(2) + ')';
+    }
+  }
+
+  function standardNormalPDF(z) {
+    return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z);
+  }
+
+  function empiricalPDF(x, mean, sd, skew, kurt) {
+    const z = (x - mean) / sd;
+    const phi = standardNormalPDF(z);
+
+    const H3 = z * z * z - 3 * z;
+    const H4 = z * z * z * z - 6 * z * z + 3;
+
+    let factor = 1 + (skew / 6) * H3 + (kurt / 24) * H4;
+    if (factor < 0.001) factor = 0.001;
+
+    let dens = (phi / sd) * factor;
+    if (x < minVal || x > maxVal) return 0;
+    return dens;
+  }
+
+  function renderChart() {
+    const canvas = document.getElementById('chartCanvas');
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const padLeft = 60;
+    const padRight = 40;
+    const padTop = 40;
+    const padBottom = 55;
+    const plotW = w - padLeft - padRight;
+    const plotH = h - padTop - padBottom;
+
+    function xToPx(val) {
+      return padLeft + ((val - minVal) / (maxVal - minVal)) * plotW;
+    }
+
+    const numPoints = 250;
+    let maxDens = 0;
+    const step = (maxVal - minVal) / numPoints;
+
+    for (let i = 0; i <= numPoints; i++) {
+      const x = minVal + i * step;
+      const dNorm = (1 / (stats.sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - stats.mean) / stats.sd, 2));
+      const dEmp = empiricalPDF(x, stats.mean, stats.sd, stats.skew, stats.kurt);
+      if (dNorm > maxDens) maxDens = dNorm;
+      if (dEmp > maxDens) maxDens = dEmp;
+    }
+
+    maxDens = maxDens * 1.18;
+
+    function yToPx(dens) {
+      return (padTop + plotH) - (dens / maxDens) * plotH;
+    }
+
+    ctx.strokeStyle = '#e9ecef';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= 10; i++) {
+      const xVal = minVal + (i / 10) * (maxVal - minVal);
+      const px = xToPx(xVal);
+      ctx.moveTo(px, padTop);
+      ctx.lineTo(px, padTop + plotH);
+    }
+    ctx.stroke();
+
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(padLeft, padTop + plotH);
+    ctx.lineTo(padLeft + plotW, padTop + plotH);
+    ctx.stroke();
+
+    ctx.fillStyle = '#475569';
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'center';
+    for (let i = 0; i <= 10; i++) {
+      const xVal = minVal + (i / 10) * (maxVal - minVal);
+      const px = xToPx(xVal);
+      ctx.fillText(xVal.toFixed(currentScale === 100 ? 0 : 1), px, padTop + plotH + 18);
+    }
+
+    const showSD = document.getElementById('chkSD').checked;
+    if (showSD) {
+      const xM1 = Math.max(minVal, stats.mean - stats.sd);
+      const xP1 = Math.min(maxVal, stats.mean + stats.sd);
+      const xM2 = Math.max(minVal, stats.mean - 2 * stats.sd);
+      const xP2 = Math.min(maxVal, stats.mean + 2 * stats.sd);
+
+      ctx.fillStyle = 'rgba(26, 127, 55, 0.08)';
+      ctx.fillRect(xToPx(xM2), padTop, xToPx(xP2) - xToPx(xM2), plotH);
+
+      ctx.fillStyle = 'rgba(26, 127, 55, 0.16)';
+      ctx.fillRect(xToPx(xM1), padTop, xToPx(xP1) - xToPx(xM1), plotH);
+
+      ctx.strokeStyle = 'rgba(26, 127, 55, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+
+      ctx.beginPath();
+      ctx.moveTo(xToPx(xM1), padTop); ctx.lineTo(xToPx(xM1), padTop + plotH);
+      ctx.moveTo(xToPx(xP1), padTop); ctx.lineTo(xToPx(xP1), padTop + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#1a7f37';
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillText('-1 DP', xToPx(xM1), padTop + 14);
+      ctx.fillText('+1 DP', xToPx(xP1), padTop + 14);
+    }
+
+    const showNormal = document.getElementById('chkNormal').checked;
+    if (showNormal) {
+      ctx.strokeStyle = '#94a3b8';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+
+      for (let i = 0; i <= numPoints; i++) {
+        const x = minVal + i * step;
+        const dNorm = (1 / (stats.sd * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * Math.pow((x - stats.mean) / stats.sd, 2));
+        const px = xToPx(x);
+        const py = yToPx(dNorm);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    const showEmpirical = document.getElementById('chkEmpirical').checked;
+    if (showEmpirical) {
+      const grad = ctx.createLinearGradient(0, padTop, 0, padTop + plotH);
+      grad.addColorStop(0, 'rgba(9, 105, 218, 0.28)');
+      grad.addColorStop(1, 'rgba(9, 105, 218, 0.02)');
+
+      ctx.beginPath();
+      ctx.moveTo(xToPx(minVal), padTop + plotH);
+
+      for (let i = 0; i <= numPoints; i++) {
+        const x = minVal + i * step;
+        const dEmp = empiricalPDF(x, stats.mean, stats.sd, stats.skew, stats.kurt);
+        const px = xToPx(x);
+        const py = yToPx(dEmp);
+        ctx.lineTo(px, py);
+      }
+
+      ctx.lineTo(xToPx(maxVal), padTop + plotH);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.strokeStyle = '#0969da';
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      for (let i = 0; i <= numPoints; i++) {
+        const x = minVal + i * step;
+        const dEmp = empiricalPDF(x, stats.mean, stats.sd, stats.skew, stats.kurt);
+        const px = xToPx(x);
+        const py = yToPx(dEmp);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    const showKurt = document.getElementById('chkKurtosis').checked;
+    if (showKurt) {
+      const peakX = stats.mean;
+      const dNormPeak = (1 / (stats.sd * Math.sqrt(2 * Math.PI)));
+      const dEmpPeak = empiricalPDF(peakX, stats.mean, stats.sd, stats.skew, stats.kurt);
+
+      const pxPeak = xToPx(peakX);
+      const pyNorm = yToPx(dNormPeak);
+      const pyEmp = yToPx(dEmpPeak);
+
+      ctx.strokeStyle = '#8250df';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(pxPeak - 24, pyEmp);
+      ctx.lineTo(pxPeak + 24, pyEmp);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#8250df';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(pxPeak, pyNorm);
+      ctx.lineTo(pxPeak, pyEmp);
+      ctx.stroke();
+
+      ctx.fillStyle = '#8250df';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'left';
+      const kurtLabel = stats.kurt > 0 ? ('Leptocurtose (+' + stats.kurt.toFixed(2) + ')') : ('Platicurtose (' + stats.kurt.toFixed(2) + ')');
+      ctx.fillText(kurtLabel, pxPeak + 10, (pyNorm + pyEmp) / 2);
+    }
+
+    const showMean = document.getElementById('chkMean').checked;
+    if (showMean) {
+      const pxM = xToPx(stats.mean);
+      ctx.strokeStyle = '#cf222e';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(pxM, padTop);
+      ctx.lineTo(pxM, padTop + plotH);
+      ctx.stroke();
+
+      ctx.fillStyle = '#cf222e';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText('Média = ' + stats.mean.toFixed(2), pxM - 6, padTop + 20);
+    }
+
+    const showMedian = document.getElementById('chkMedian').checked;
+    if (showMedian) {
+      const pxMed = xToPx(stats.median);
+      ctx.strokeStyle = '#9a6700';
+      ctx.lineWidth = 2.2;
+      ctx.setLineDash([6, 3]);
+      ctx.beginPath();
+      ctx.moveTo(pxMed, padTop);
+      ctx.lineTo(pxMed, padTop + plotH);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#9a6700';
+      ctx.font = 'bold 11px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('Mediana = ' + stats.median.toFixed(2), pxMed + 6, padTop + 36);
+    }
+
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'left';
+    let legY = padTop + 16;
+    if (showNormal) {
+      ctx.fillStyle = '#64748b';
+      ctx.fillText('-- Curva Gaussiana Simétrica', padLeft + 10, legY);
+      legY += 15;
+    }
+    if (showEmpirical) {
+      ctx.fillStyle = '#0969da';
+      ctx.fillText('— Curva Empírica (Assimetria/Curtose)', padLeft + 10, legY);
+    }
+  }
+
+  const canvasElem = document.getElementById('chartCanvas');
+
+  function handleInteraction(clientX) {
+    const rect = canvasElem.getBoundingClientRect();
+    const padLeft = 60 * (rect.width / canvasElem.width);
+    const padRight = 40 * (rect.width / canvasElem.width);
+    const plotW = rect.width - padLeft - padRight;
+
+    let posX = clientX - rect.left - padLeft;
+    posX = Math.max(0, Math.min(plotW, posX));
+
+    const val = minVal + (posX / plotW) * (maxVal - minVal);
+    stats.mean = Math.round(val * 20) / 20;
+
+    document.getElementById('selectPreset').value = 'custom';
+    document.getElementById('currentStatusBadge').textContent = 'Modelo: Personalizado (Arrasto)';
+    document.getElementById('currentStatusBadge').style.background = '#f1f5f9';
+    document.getElementById('currentStatusBadge').style.color = '#334155';
+
+    updateAllInputsFromStats();
+    recalculateDependencies('mean');
+  }
+
+  canvasElem.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    handleInteraction(e.clientX);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (isDragging) {
+      handleInteraction(e.clientX);
+    }
+  });
+
+  window.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  canvasElem.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      isDragging = true;
+      handleInteraction(e.touches[0].clientX);
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    if (isDragging && e.touches.length === 1) {
+      handleInteraction(e.touches[0].clientX);
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchend', () => {
+    isDragging = false;
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadPreset('aga');
+  });
+</script>
+
+</body>
+</html>
